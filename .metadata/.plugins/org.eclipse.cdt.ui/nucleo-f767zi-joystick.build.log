@@ -1,0 +1,10 @@
+20:36:12 **** Incremental Build of configuration Debug for project nucleo-f767zi-joystick ****
+make -j12 all 
+arm-none-eabi-size  nucleo-f767zi-joystick.elf 
+   text	   data	    bss	    dec	    hex	filename
+  28512	    476	   3404	  32392	   7e88	nucleo-f767zi-joystick.elf
+Finished building: default.size.stdout
+ 
+
+20:36:12 Build Finished. 0 errors, 0 warnings. (took 275ms)
+

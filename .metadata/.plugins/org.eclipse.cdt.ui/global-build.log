@@ -1,0 +1,21 @@
+20:36:01 **** Incremental Build of configuration Debug for project nucleo-f767zi-joystick ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "nucleo-f767zi-joystick.elf" @"objects.list"   -mcpu=cortex-m7 -T"C:\Users\Macante\Desktop\STM32F7-Projects\nucleo-f767zi-joystick\STM32F767ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="nucleo-f767zi-joystick.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: nucleo-f767zi-joystick.elf
+ 
+arm-none-eabi-size  nucleo-f767zi-joystick.elf 
+arm-none-eabi-objdump -h -S nucleo-f767zi-joystick.elf  > "nucleo-f767zi-joystick.list"
+   text	   data	    bss	    dec	    hex	filename
+  28512	    476	   3404	  32392	   7e88	nucleo-f767zi-joystick.elf
+Finished building: default.size.stdout
+ 
+Finished building: nucleo-f767zi-joystick.list
+ 
+20:36:12 **** Incremental Build of configuration Debug for project nucleo-f767zi-joystick ****
+make -j12 all 
+arm-none-eabi-size  nucleo-f767zi-joystick.elf 
+   text	   data	    bss	    dec	    hex	filename
+  28512	    476	   3404	  32392	   7e88	nucleo-f767zi-joystick.elf
+Finished building: default.size.stdout
+ 

@@ -1,0 +1,10 @@
+03:06:07 **** Incremental Build of configuration Debug for project nucleo-f767zi_lcd-drivers ****
+make -j12 all 
+arm-none-eabi-size  nucleo-f767zi_lcd-drivers.elf 
+   text	   data	    bss	    dec	    hex	filename
+  32692	    436	  22644	  55772	   d9dc	nucleo-f767zi_lcd-drivers.elf
+Finished building: default.size.stdout
+ 
+
+03:06:07 Build Finished. 0 errors, 0 warnings. (took 433ms)
+
