@@ -1,0 +1,39 @@
+!SESSION 2024-06-08 10:19:05.351 -----------------------------------------------
+eclipse.buildId=Version 1.15.1
+java.version=17.0.8.1
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-06-08 10:20:01.631
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-06-08 10:20:01.661
+!MESSAGE Log4j2 initialized with config file C:\Users\MacKante\Desktop\STM32F7-Projects\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-06-08 10:20:07.764
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-06-08 10:22:15.568
+!MESSAGE Indexed 'mcp2510_drivers' (28 sources, 91 headers) in 11.7 sec: 7,868 declarations; 47,933 references; 0 unresolved inclusions; 1 syntax errors; 2 unresolved names (0.0036%)
+
+!ENTRY com.st.stm32cube.ide.mcu.toolchain.arm-none 4 4 2024-06-08 10:39:36.536
+!MESSAGE Failed to get MCU from name "" in toolchain com.st.stm32cube.ide.mcu.gnu.managedbuild.toolchain.base.1162906100
+
+!ENTRY com.st.stm32cube.ide.mcu.toolchain.arm-none 4 4 2024-06-08 10:39:36.538
+!MESSAGE Failed to get MCU from name "" in toolchain com.st.stm32cube.ide.mcu.gnu.managedbuild.toolchain.base.1162906100
+
+!ENTRY com.st.stm32cube.ide.mcu.toolchain.arm-none 4 4 2024-06-08 10:39:42.769
+!MESSAGE Failed to get MCU from name "" in toolchain com.st.stm32cube.ide.mcu.gnu.managedbuild.toolchain.base.1162906100
+
+!ENTRY com.st.stm32cube.ide.mcu.toolchain.arm-none 4 4 2024-06-08 10:39:43.137
+!MESSAGE Failed to get MCU from name "" in toolchain com.st.stm32cube.ide.mcu.gnu.managedbuild.toolchain.base.1162906100
+
+!ENTRY com.st.stm32cube.ide.mcu.toolchain.arm-none 4 4 2024-06-08 10:39:43.526
+!MESSAGE Failed to get MCU from name "" in toolchain com.st.stm32cube.ide.mcu.gnu.managedbuild.toolchain.base.1162906100
+
+!ENTRY com.st.stm32cube.ide.mcu.toolchain.arm-none 4 4 2024-06-08 10:39:43.539
+!MESSAGE Failed to get MCU from name "" in toolchain com.st.stm32cube.ide.mcu.gnu.managedbuild.toolchain.base.1162906100
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-06-08 10:39:56.254
+!MESSAGE Indexed 'Helios-Radio-Board' (47 sources, 157 headers) in 11.9 sec: 17,973 declarations; 91,075 references; 3 unresolved inclusions; 138 syntax errors; 177 unresolved names (0.16%)

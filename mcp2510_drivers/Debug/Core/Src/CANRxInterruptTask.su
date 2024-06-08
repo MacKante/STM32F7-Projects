@@ -1,0 +1,2 @@
+../Core/Src/CANRxInterruptTask.c:12:6:CANRxInterruptTask	16	static
+../Core/Src/CANRxInterruptTask.c:20:6:CANRxInterrupt	32	static
