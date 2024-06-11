@@ -9,7 +9,7 @@ void queueMessageTask2(void* arg) {
 	};
 
 	for(;;) {
-		osMessageQueuePut(CANTxMessageQueue, &msg2, 0, osWaitForever);
+		osMessageQueuePut(CAN2TxMessageQueue, &msg2, 0, osWaitForever);
 		osDelay(3500);
 	}
 }

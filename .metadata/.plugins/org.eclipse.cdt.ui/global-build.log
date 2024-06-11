@@ -1,4 +1,4 @@
-12:02:48 **** Incremental Build of configuration Debug for project mcp2510_drivers ****
+18:52:27 **** Incremental Build of configuration Debug for project mcp2510_drivers ****
 make -j8 all 
 arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
 arm-none-eabi-gcc -o "mcp2510_drivers.elf" @"objects.list"   -mcpu=cortex-m7 -T"C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\STM32F767ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="mcp2510_drivers.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
@@ -7,15 +7,15 @@ Finished building target: mcp2510_drivers.elf
 arm-none-eabi-size  mcp2510_drivers.elf 
 arm-none-eabi-objdump -h -S mcp2510_drivers.elf  > "mcp2510_drivers.list"
    text	   data	    bss	    dec	    hex	filename
-  37944	     96	  22432	  60472	   ec38	mcp2510_drivers.elf
+  38196	     96	  22536	  60828	   ed9c	mcp2510_drivers.elf
 Finished building: default.size.stdout
  
 Finished building: mcp2510_drivers.list
  
-12:03:33 **** Incremental Build of configuration Debug for project mcp2510_drivers ****
+18:52:34 **** Incremental Build of configuration Debug for project mcp2510_drivers ****
 make -j8 all 
 arm-none-eabi-size  mcp2510_drivers.elf 
    text	   data	    bss	    dec	    hex	filename
-  37944	     96	  22432	  60472	   ec38	mcp2510_drivers.elf
+  38196	     96	  22536	  60828	   ed9c	mcp2510_drivers.elf
 Finished building: default.size.stdout
  

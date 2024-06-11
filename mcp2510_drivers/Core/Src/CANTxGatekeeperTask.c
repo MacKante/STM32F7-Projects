@@ -70,3 +70,39 @@ void CANTxGatekeeper(CANMsg *msg) {
 	}
 
 }
+
+
+// --------------------------------------------------------------------------------
+
+void CANTxGatekeeperTask_2(void* arg) {
+
+    CANMsg newMsg;
+
+    for (;;) {
+        CANTxGatekeeper(&newMsg);
+        osDelay(100);
+    }
+}
+
+void CANTxGatekeeper_2(CANMsg *msg) {
+	// Acquire message to send from queue
+	osMessageQueueGet(CAN2TxMessageQueue, msg, NULL, osWaitForever);
+
+	// Wait for mutex
+	if ( osMutexWait(SPI2MutexHandle, 0) == osOK )
+	{
+		// check if CAN message is standard/extended
+		// if extendedID == 0, then message is standard
+		if ((msg->extendedID == 0) && (msg->ID != 0))
+		{
+			sendCANMessage_2(msg);
+		}
+		else
+		{
+			sendExtendedCANMessage_2(msg);
+		}
+
+		osMutexRelease(SPI2MutexHandle);
+	}
+
+}

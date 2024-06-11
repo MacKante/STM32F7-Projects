@@ -36,3 +36,19 @@ extern uint8_t blueStatus;
 extern uint8_t greenStatus;
 
 // https://www.codesdope.com/blog/article/making-a-queue-using-linked-list-in-c/
+
+// ------------------------------------------------------ Second definitions for testing purposes ------------------------------------------------------
+
+void CAN_IC_READ_REGISTER_2(uint8_t address, uint8_t* buffer);
+void CAN_IC_WRITE_REGISTER_BITWISE_2(uint8_t address, uint8_t mask, uint8_t value);
+void CAN_IC_WRITE_REGISTER_2(uint8_t address, uint8_t value);
+void ConfigureCANSPI_2(void);
+void sendCANMessage_2(CANMsg *msg);
+void sendExtendedCANMessage_2(CANMsg *msg);
+void receiveCANMessage_2(uint8_t channel, uint32_t* ID, uint8_t* DLC, uint8_t* data);
+uint8_t checkAvailableTXChannel_2();
+
+extern SPI_HandleTypeDef hspi4;
+extern osMutexId_t SPI2MutexHandle;
+extern osMessageQueueId_t CAN2InterruptQueue;
+extern osMessageQueueId_t CAN2TxMessageQueue;

@@ -37,3 +37,39 @@ Command-line arguments:  -os win32 -ws win32 -arch x86_64
 
 !ENTRY org.eclipse.cdt.core 1 0 2024-06-08 10:39:56.254
 !MESSAGE Indexed 'Helios-Radio-Board' (47 sources, 157 headers) in 11.9 sec: 17,973 declarations; 91,075 references; 3 unresolved inclusions; 138 syntax errors; 177 unresolved names (0.16%)
+!SESSION 2024-06-10 17:18:18.720 -----------------------------------------------
+eclipse.buildId=Version 1.15.1
+java.version=17.0.8.1
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-06-10 17:19:35.189
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-06-10 17:19:35.208
+!MESSAGE Log4j2 initialized with config file C:\Users\MacKante\Desktop\STM32F7-Projects\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.toolchain.arm-none 4 4 2024-06-10 17:19:47.036
+!MESSAGE Failed to get MCU from name "" in toolchain com.st.stm32cube.ide.mcu.gnu.managedbuild.toolchain.base.1162906100
+
+!ENTRY com.st.stm32cube.ide.mcu.toolchain.arm-none 4 4 2024-06-10 17:19:47.042
+!MESSAGE Failed to get MCU from name "" in toolchain com.st.stm32cube.ide.mcu.gnu.managedbuild.toolchain.base.1162906100
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-06-10 17:20:02.338
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY com.st.stm32cube.ide.mcu.toolchain.arm-none 4 4 2024-06-10 17:59:18.197
+!MESSAGE Failed to get MCU from name "" in toolchain com.st.stm32cube.ide.mcu.gnu.managedbuild.toolchain.base.1162906100
+
+!ENTRY com.st.stm32cube.ide.mcu.toolchain.arm-none 4 4 2024-06-10 17:59:18.199
+!MESSAGE Failed to get MCU from name "" in toolchain com.st.stm32cube.ide.mcu.gnu.managedbuild.toolchain.base.1162906100
+
+!ENTRY com.st.stm32cube.ide.mcu.toolchain.arm-none 4 4 2024-06-10 18:22:56.159
+!MESSAGE Failed to get MCU from name "" in toolchain com.st.stm32cube.ide.mcu.gnu.managedbuild.toolchain.base.1162906100
+
+!ENTRY com.st.stm32cube.ide.mcu.toolchain.arm-none 4 4 2024-06-10 18:22:56.160
+!MESSAGE Failed to get MCU from name "" in toolchain com.st.stm32cube.ide.mcu.gnu.managedbuild.toolchain.base.1162906100
+
+!ENTRY org.eclipse.cdt.dsf 4 10005 2024-06-10 18:28:27.953
+!MESSAGE Request for monitor: 'RequestMonitor (org.eclipse.cdt.dsf.gdb.internal.ui.actions.DsfTerminateCommand$3$1@161160b5): Status OK: unknown code=0 OK' resulted in a rejected execution exception.

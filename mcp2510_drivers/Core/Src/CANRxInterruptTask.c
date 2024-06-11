@@ -58,3 +58,37 @@ void CANRxInterrupt()
 	HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
 	#endif
 }
+
+// ---------------------------------------- For testing purposes ----------------------------------------
+
+void CANRxInterruptTask_2(void* arg)
+{
+	for(;;) {
+		CANRxInterrupt_2();
+		osDelay(100);
+	}
+}
+
+void CANRxInterrupt_2()
+{
+	uint16_t GPIO_Pin = 0;
+	osMessageQueueGet(CAN2InterruptQueue, &GPIO_Pin, 0, osWaitForever);
+
+	uint32_t ID = 0;
+	uint8_t DLC = 0;
+	uint8_t data[8] = {0};
+
+	if (osMutexWait(SPI2MutexHandle, 0) == osOK)
+	{
+		if(GPIO_Pin == CAN2_RX0BF_Pin)
+		{
+			receiveCANMessage_2(0, &ID, &DLC, data);
+		}
+		else if (GPIO_Pin == CAN2_RX1BF_Pin)
+		{
+			receiveCANMessage_2(1, &ID, &DLC, data);
+		}
+
+		osMutexRelease(SPI2MutexHandle);
+	}
+}

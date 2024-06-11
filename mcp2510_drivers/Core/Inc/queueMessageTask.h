@@ -7,3 +7,4 @@ void queueMessageTask1(void* arg);
 void queueMessageTask2(void* arg);
 
 extern osMessageQueueId_t CANInterruptQueue;
+extern osMessageQueueId_t CAN2InterruptQueue;

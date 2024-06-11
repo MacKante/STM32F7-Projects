@@ -1,0 +1,8 @@
+../Core/Src/CAN2.c:34:6:CAN_IC_READ_REGISTER_2	1
+../Core/Src/CAN2.c:54:6:CAN_IC_WRITE_REGISTER_2	1
+../Core/Src/CAN2.c:74:6:CAN_IC_WRITE_REGISTER_BITWISE_2	1
+../Core/Src/CAN2.c:91:6:ConfigureCANSPI_2	1
+../Core/Src/CAN2.c:126:9:checkAvailableTXChannel_2	4
+../Core/Src/CAN2.c:169:6:sendCANMessage_2	3
+../Core/Src/CAN2.c:209:6:sendExtendedCANMessage_2	2
+../Core/Src/CAN2.c:251:6:receiveCANMessage_2	4

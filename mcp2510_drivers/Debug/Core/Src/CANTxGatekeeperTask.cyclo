@@ -1,2 +1,4 @@
 ../Core/Src/CANTxGatekeeperTask.c:10:6:CANTxGatekeeperTask	1
 ../Core/Src/CANTxGatekeeperTask.c:51:6:CANTxGatekeeper	4
+../Core/Src/CANTxGatekeeperTask.c:77:6:CANTxGatekeeperTask_2	1
+../Core/Src/CANTxGatekeeperTask.c:87:6:CANTxGatekeeper_2	4

@@ -76,6 +76,14 @@ const osThreadAttr_t CANRXInterruptTask_attributes = {
   .stack_size = DEFAULT_TASK_STACK_SIZE
 };
 
+osMutexId_t SPIMutexHandle;
+const osMutexAttr_t SPIMutex_attributes = {
+  .name = "SPIMutex"
+};
+
+osMessageQueueId_t CANInterruptQueue;
+osMessageQueueId_t CANTxMessageQueue;
+
 osThreadId_t queueMessageTask1Handle;
 const osThreadAttr_t queueMessageTask1_attributes = {
   .name = "queueMessageTask1",
@@ -90,13 +98,30 @@ const osThreadAttr_t queueMessageTask2_attributes = {
   .stack_size = DEFAULT_TASK_STACK_SIZE
 };
 
-osMutexId_t SPIMutexHandle;
-const osMutexAttr_t SPIMutex_attributes = {
-  .name = "SPIMutex"
+// --------------------------------------------------- testing ---------------------------------------------------
+
+osMutexId_t CAN2TxGateKeeperTaskHandle;
+const osThreadAttr_t CAN2TxGateKeeperTask_attributes = {
+  .name = "CAN2TxGateKeeperTask",
+  .priority = (osPriority) osPriorityNormal1,
+  .stack_size = DEFAULT_TASK_STACK_SIZE
 };
 
-osMessageQueueId_t CANInterruptQueue;
-osMessageQueueId_t CANTxMessageQueue;
+/* Definitions for CANRXInterruptTask */
+osThreadId_t CAN2RXInterruptTaskHandle;
+const osThreadAttr_t CAN2RXInterruptTask_attributes = {
+  .name = "CAN2RXInterruptTask",
+  .priority = (osPriority_t) osPriorityNormal1,
+  .stack_size = DEFAULT_TASK_STACK_SIZE
+};
+
+osMutexId_t SPI2MutexHandle;
+const osMutexAttr_t SPI2Mutex_attributes = {
+  .name = "SPI2Mutex"
+};
+
+osMessageQueueId_t CAN2InterruptQueue;
+osMessageQueueId_t CAN2TxMessageQueue;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -152,6 +177,7 @@ int main(void)
   MX_SPI4_Init();
   /* USER CODE BEGIN 2 */
   ConfigureCANSPI();
+  // ConfigureCANSPI_2();
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -161,7 +187,7 @@ int main(void)
   /* add mutexes, ... */
   /* Definitions for SPIMutex */
   SPIMutexHandle = osMutexNew(&SPIMutex_attributes); //unused
-
+  // SPI2MutexHandle = osMutexNew(&SPI2Mutex_attributes); //unused
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
@@ -176,6 +202,9 @@ int main(void)
   /* add queues, ... */
   CANInterruptQueue = osMessageQueueNew(CAN_INTERRUPT_QUEUE_COUNT, sizeof(uint16_t), NULL);
   CANTxMessageQueue = osMessageQueueNew(5, sizeof(CANMsg), NULL);
+
+  // CAN2InterruptQueue = osMessageQueueNew(CAN_INTERRUPT_QUEUE_COUNT, sizeof(uint16_t), NULL);
+  // CAN2TxMessageQueue = osMessageQueueNew(5, sizeof(CANMsg), NULL);
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
@@ -187,12 +216,15 @@ int main(void)
   /* creation of CANRXInterruptTask*/
   CANRXInterruptTaskHandle = osThreadNew(CANRxInterruptTask, NULL, &CANRXInterruptTask_attributes);
 
+  // CAN2RXInterruptTaskHandle = osThreadNew(CANRxInterruptTask_2, NULL, &CAN2RXInterruptTask_attributes);
+
   /* creation of CANTxGatekeeperTask*/
   CANTxGateKeeperTaskHandle = osThreadNew(CANTxGatekeeperTask, NULL, &CANTxGateKeeperTask_attributes);
 
+  // CAN2TxGateKeeperTaskHandle = osThreadNew(CANTxGatekeeperTask_2, NULL, &CAN2TxGateKeeperTask_attributes);
   /* creation of queue CAN message tasks */
   queueMessageTask1Handle = osThreadNew(queueMessageTask1, NULL, &queueMessageTask1_attributes);
-  queueMessageTask2Handle = osThreadNew(queueMessageTask2, NULL, &queueMessageTask2_attributes);
+  // queueMessageTask2Handle = osThreadNew(queueMessageTask2, NULL, &queueMessageTask2_attributes);
 
   /* USER CODE END RTOS_THREADS */
 
@@ -465,8 +497,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(USER_Btn_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : CAN2_RX1BF_Pin CAN2_RX0BF_Pin */
-  GPIO_InitStruct.Pin = CAN2_RX1BF_Pin|CAN2_RX0BF_Pin;
+  /*Configure GPIO pins : CAN2_RX1BF_Pin CAN2_RX0BF_Pin CAN2_INT_Pin */
+  GPIO_InitStruct.Pin = CAN2_RX1BF_Pin|CAN2_RX0BF_Pin|CAN2_INT_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
@@ -506,12 +538,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(CAN_RX1BF_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : CAN2_INT_Pin */
-  GPIO_InitStruct.Pin = CAN2_INT_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(CAN2_INT_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : RMII_TXD1_Pin */
   GPIO_InitStruct.Pin = RMII_TXD1_Pin;
@@ -568,6 +594,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	if ((GPIO_Pin == CAN_RX0BF_Pin) || (GPIO_Pin == CAN_RX1BF_Pin)) {
 		osMessageQueuePut(CANInterruptQueue, &GPIO_Pin, 0, 0);
+		//canReceive = 1;
+	}
+	else if ((GPIO_Pin == CAN2_RX0BF_Pin) || (GPIO_Pin == CAN2_RX1BF_Pin)) {
+		osMessageQueuePut(CAN2InterruptQueue, &GPIO_Pin, 0, 0);
 		//canReceive = 1;
 	}
 }
