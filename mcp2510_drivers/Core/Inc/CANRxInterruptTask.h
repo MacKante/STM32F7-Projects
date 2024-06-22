@@ -16,3 +16,5 @@ void CANRxInterrupt();
 extern SPI_HandleTypeDef hspi1;
 extern osMutexId_t SPIMutexHandle;
 extern osMessageQueueId_t CANInterruptQueue;
+
+extern CANPeripheral peripheral;

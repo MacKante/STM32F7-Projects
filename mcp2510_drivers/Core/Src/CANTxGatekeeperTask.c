@@ -44,7 +44,6 @@ void CANTxGatekeeperTask(void* arg) {
     for (;;) {
 //    	osMessageQueuePut(CANTxMessageQueue, &msg1, 0, osWaitForever);
         CANTxGatekeeper(&newMsg);
-        osDelay(100);
     }
 }
 
@@ -59,11 +58,11 @@ void CANTxGatekeeper(CANMsg *msg) {
 		// if extendedID == 0, then message is standard
 		if ((msg->extendedID == 0) && (msg->ID != 0))
 		{
-			sendCANMessage(msg);
+			sendCANMessage(msg, &peripheral);
 		}
 		else
 		{
-			sendExtendedCANMessage(msg);
+			sendExtendedCANMessage(msg, &peripheral);
 		}
 
 		osMutexRelease(SPIMutexHandle);

@@ -1,0 +1,42 @@
+/*
+ * CANTransmitTask.c
+ *
+ *  Created on: Feb 10, 2024
+ *      Author: MacKante
+ */
+
+#include "CANTxGatekeeperTask.h"
+
+void CANTxGatekeeperTask(void* arg) {
+
+    CANMsg newMsg;
+
+    for (;;) {
+        CANTxGatekeeper(&newMsg);
+        osDelay(100);
+    }
+}
+
+void CANTxGatekeeper(CANMsg *msg) {
+	// Acquire message to send from queue
+	osMessageQueueGet(CANTxMessageQueue, msg, NULL, osWaitForever);
+
+	// Wait for mutex
+	HAL_StatusTypeDef status = osMutexWait(SPIMutexHandle, 0);
+	if (status == osOK )
+	{
+		// check if CAN message is standard/extended
+		// if extendedID == 0, then message is standard
+		if ((msg->extendedID == 0) && (msg->ID != 0))
+		{
+			sendCANMessage(msg, &peripheral1);
+		}
+		else
+		{
+			sendExtendedCANMessage(msg, &peripheral1);
+		}
+
+		osMutexRelease(SPIMutexHandle);
+	}
+
+}

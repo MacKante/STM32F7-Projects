@@ -97,6 +97,13 @@ const osMutexAttr_t SPIMutex_attributes = {
 
 osMessageQueueId_t CANInterruptQueue;
 osMessageQueueId_t CANTxMessageQueue;
+
+CANPeripheral peripheral = {
+  .CS_PORT= CAN_CS_GPIO_Port,
+  .CS_PIN = CAN_CS_Pin,
+  .hspi = &hspi1
+};
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -180,7 +187,7 @@ int main(void)
 
   /* Create the thread(s) */
   /* creation of defaultTask */
-  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+  // defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -192,7 +199,7 @@ int main(void)
 
   /* creation of queue CAN message tasks */
   queueMessageTask1Handle = osThreadNew(queueMessageTask1, NULL, &queueMessageTask1_attributes);
-  queueMessageTask2Handle = osThreadNew(queueMessageTask2, NULL, &queueMessageTask2_attributes);
+  // queueMessageTask2Handle = osThreadNew(queueMessageTask2, NULL, &queueMessageTask2_attributes);
 
   /* USER CODE END RTOS_THREADS */
 
