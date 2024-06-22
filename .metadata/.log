@@ -37,3 +37,24 @@ Command-line arguments:  -os win32 -ws win32 -arch x86_64
 
 !ENTRY org.eclipse.cdt.core 1 0 2024-06-08 10:39:56.254
 !MESSAGE Indexed 'Helios-Radio-Board' (47 sources, 157 headers) in 11.9 sec: 17,973 declarations; 91,075 references; 3 unresolved inclusions; 138 syntax errors; 177 unresolved names (0.16%)
+!SESSION 2024-06-22 00:27:41.633 -----------------------------------------------
+eclipse.buildId=Version 1.15.1
+java.version=17.0.8.1
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-06-22 00:28:04.123
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-06-22 00:28:04.131
+!MESSAGE Log4j2 initialized with config file C:\Users\MacKante\Desktop\STM32F7-Projects\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.toolchain.arm-none 4 4 2024-06-22 00:28:10.062
+!MESSAGE Failed to get MCU from name "" in toolchain com.st.stm32cube.ide.mcu.gnu.managedbuild.toolchain.base.1162906100
+
+!ENTRY com.st.stm32cube.ide.mcu.toolchain.arm-none 4 4 2024-06-22 00:28:10.062
+!MESSAGE Failed to get MCU from name "" in toolchain com.st.stm32cube.ide.mcu.gnu.managedbuild.toolchain.base.1162906100
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-06-22 00:28:17.618
+!MESSAGE Started RMI Server, listening on port 41337

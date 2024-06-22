@@ -158,7 +158,7 @@ int main(void)
   MX_SPI1_Init();
   MX_SPI4_Init();
   /* USER CODE BEGIN 2 */
-  ConfigureCANSPI(&peripheral);
+  ConfigureCANSPI();
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -181,8 +181,8 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
-  CANInterruptQueue = osMessageQueueNew(10, sizeof(uint16_t), NULL);
-  CANTxMessageQueue = osMessageQueueNew(10, sizeof(CANMsg), NULL);
+  CANInterruptQueue = osMessageQueueNew(CAN_INTERRUPT_QUEUE_COUNT, sizeof(uint16_t), NULL);
+  CANTxMessageQueue = osMessageQueueNew(5, sizeof(CANMsg), NULL);
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */

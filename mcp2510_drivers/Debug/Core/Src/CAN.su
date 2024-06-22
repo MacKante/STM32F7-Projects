@@ -1,8 +1,8 @@
-../Core/Src/CAN.c:34:6:CAN_IC_READ_REGISTER	24	static
+../Core/Src/CAN.c:34:6:CAN_IC_READ_REGISTER	32	static
 ../Core/Src/CAN.c:54:6:CAN_IC_WRITE_REGISTER	24	static
 ../Core/Src/CAN.c:74:6:CAN_IC_WRITE_REGISTER_BITWISE	24	static
-../Core/Src/CAN.c:91:6:ConfigureCANSPI	16	static
-../Core/Src/CAN.c:126:9:checkAvailableTXChannel	16	static
+../Core/Src/CAN.c:91:6:ConfigureCANSPI	24	static
+../Core/Src/CAN.c:126:9:checkAvailableTXChannel	24	static
 ../Core/Src/CAN.c:169:6:sendCANMessage	32	static
 ../Core/Src/CAN.c:209:6:sendExtendedCANMessage	32	static
 ../Core/Src/CAN.c:251:6:receiveCANMessage	40	static
