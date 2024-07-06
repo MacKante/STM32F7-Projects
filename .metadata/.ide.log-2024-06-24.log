@@ -1,0 +1,210 @@
+2024-06-24 17:19:24,087 [INFO] RtosManager:930 - There is no active RTOS [Cortex-M7NS]
+2024-06-24 17:20:04,400 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2024-06-24 17:20:04,568 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2024-06-24 17:20:12,222 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2024-06-24 17:20:24,451 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 864537864 Bytes (1073741824)
+2024-06-24 17:20:26,716 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 897043720 Bytes (1073741824)
+2024-06-24 17:20:27,754 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 428804248 Bytes (1073741824)
+2024-06-24 17:20:28,155 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: SPI
+2024-06-24 17:20:28,155 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: SPI
+2024-06-24 17:20:28,155 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: SYS
+2024-06-24 17:20:28,156 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: RCC
+2024-06-24 17:20:28,156 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: USB_OTG_FS
+2024-06-24 17:20:28,156 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: NVIC
+2024-06-24 17:20:28,156 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: USART
+2024-06-24 17:20:28,157 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: GPIO
+2024-06-24 17:20:28,159 [INFO] CodeGenerator:807 - code generatio: config db path: C:\ST\STM32CubeIDE_1.12.1\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.11.1.202404110753\\db\
+2024-06-24 17:20:28,420 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\license.tmp_save
+2024-06-24 17:20:28,567 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\license.tmp
+2024-06-24 17:20:28,734 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\gpio.tmp_save
+2024-06-24 17:20:28,896 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\gpio.tmp
+2024-06-24 17:20:29,673 [WARN] IPConfigManager:2982 - Warning: the RefConfig PWREx_EnableUSBVoltageDetector is not available in your config.xml file
+2024-06-24 17:20:29,701 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\cortex.tmp_save
+2024-06-24 17:20:29,824 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\cortex.tmp
+2024-06-24 17:20:29,883 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\stm32f7xx_it.c_save
+2024-06-24 17:20:30,155 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\stm32f7xx_it.c
+2024-06-24 17:20:30,189 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Inc\stm32f7xx_it.h_save
+2024-06-24 17:20:30,332 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Inc\stm32f7xx_it.h
+2024-06-24 17:20:30,384 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\stm32f7xx_hal_msp.c_save
+2024-06-24 17:20:30,595 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\stm32f7xx_hal_msp.c
+2024-06-24 17:20:30,631 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\system.tmp_save
+2024-06-24 17:20:30,742 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\system.tmp
+2024-06-24 17:20:30,790 [INFO] CodeEngine:311 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Inc\stm32f7xx_hal_conf.h_save
+2024-06-24 17:20:30,963 [INFO] CodeEngine:335 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Inc\stm32f7xx_hal_conf.h
+2024-06-24 17:20:31,023 [WARN] IPConfigManager:3513 - IP not found : USB_OTG
+2024-06-24 17:20:31,024 [WARN] CodeGenerator:3951 - IP not found : null
+2024-06-24 17:20:31,062 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Inc\main.h_save
+2024-06-24 17:20:31,210 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Inc\main.h
+2024-06-24 17:20:31,244 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\main.c_save
+2024-06-24 17:20:31,462 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\main.c
+2024-06-24 17:20:32,249 [INFO] ProjectBuilder:3163 - Time for Copy HAL[1] : 409mS.
+2024-06-24 17:20:32,256 [INFO] ProjectBuilder:4736 - Project Generator version: 4.3.0-B58
+2024-06-24 17:20:32,394 [INFO] ConfigFileManager:1503 - The Die is : DIE451
+2024-06-24 17:20:36,062 [INFO] ProjectBuilder:5002 - Time for Generating toolchain IDE Files: 3806mS.
+2024-06-24 17:20:36,063 [INFO] ProjectBuilder:3034 - Time for Copy CMSIS : 1mS.
+2024-06-24 17:20:36,071 [INFO] ProjectBuilder:3034 - Time for Copy CMSIS : 0mS.
+2024-06-24 17:21:37,602 [INFO] Gpio:277 - dependency for GPIO [RCC, SPI1, SPI4, SYS, USART3, USB_OTG_FS]
+2024-06-24 17:26:59,903 [INFO] Gpio:277 - dependency for GPIO [RCC, SPI1, SPI4, SYS, USART3, USB_OTG_FS]
+2024-06-24 17:26:59,975 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2024-06-24 17:27:00,401 [INFO] Gpio:277 - dependency for GPIO [RCC, SPI1, SPI4, SYS, USART3, USB_OTG_FS]
+2024-06-24 17:27:00,479 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2024-06-24 17:27:03,031 [INFO] Gpio:277 - dependency for GPIO [RCC, SPI1, SPI4, SYS, USART3, USB_OTG_FS]
+2024-06-24 17:27:03,112 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2024-06-24 17:27:03,584 [INFO] Gpio:277 - dependency for GPIO [RCC, SPI1, SPI4, SYS, USART3, USB_OTG_FS]
+2024-06-24 17:27:03,714 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2024-06-24 17:27:06,209 [INFO] Gpio:277 - dependency for GPIO [RCC, SPI1, SPI4, SYS, USART3, USB_OTG_FS]
+2024-06-24 17:27:06,297 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2024-06-24 17:27:06,804 [INFO] Gpio:277 - dependency for GPIO [RCC, SPI1, SPI4, SYS, USART3, USB_OTG_FS]
+2024-06-24 17:27:06,898 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2024-06-24 17:27:17,709 [INFO] Gpio:277 - dependency for GPIO [RCC, SPI1, SPI4, SYS, USART3, USB_OTG_FS]
+2024-06-24 17:27:17,768 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2024-06-24 17:27:18,168 [INFO] Gpio:277 - dependency for GPIO [RCC, SPI1, SPI4, SYS, USART3, USB_OTG_FS]
+2024-06-24 17:27:18,229 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2024-06-24 17:27:32,560 [INFO] Gpio:277 - dependency for GPIO [RCC, SPI1, SPI4, SYS, USART3, USB_OTG_FS]
+2024-06-24 17:27:32,629 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2024-06-24 17:27:32,754 [INFO] Gpio:277 - dependency for GPIO [RCC, SPI1, SPI4, SYS, USART3, USB_OTG_FS]
+2024-06-24 17:27:32,828 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2024-06-24 17:27:33,193 [INFO] Gpio:277 - dependency for GPIO [RCC, SPI1, SPI4, SYS, USART3, USB_OTG_FS]
+2024-06-24 17:27:33,258 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2024-06-24 17:28:20,965 [INFO] Gpio:277 - dependency for GPIO [RCC, SPI1, SPI4, SYS, USART3, USB_OTG_FS]
+2024-06-24 17:28:21,035 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2024-06-24 17:28:21,425 [INFO] Gpio:277 - dependency for GPIO [RCC, SPI1, SPI4, SYS, USART3, USB_OTG_FS]
+2024-06-24 17:28:21,513 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2024-06-24 17:29:03,131 [INFO] Gpio:277 - dependency for GPIO [RCC, SPI1, SPI4, SYS, USART3, USB_OTG_FS]
+2024-06-24 17:29:03,219 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2024-06-24 17:29:03,561 [INFO] Gpio:277 - dependency for GPIO [RCC, SPI1, SPI4, SYS, USART3, USB_OTG_FS]
+2024-06-24 17:29:03,626 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2024-06-24 17:30:41,515 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 633915800 Bytes (1073741824)
+2024-06-24 17:30:42,699 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 706791832 Bytes (1073741824)
+2024-06-24 17:30:43,485 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 832096664 Bytes (1073741824)
+2024-06-24 17:30:43,837 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: SPI
+2024-06-24 17:30:43,837 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: SPI
+2024-06-24 17:30:43,837 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: SYS
+2024-06-24 17:30:43,837 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: RCC
+2024-06-24 17:30:43,837 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: USB_OTG_FS
+2024-06-24 17:30:43,838 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: NVIC
+2024-06-24 17:30:43,838 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: USART
+2024-06-24 17:30:43,839 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: GPIO
+2024-06-24 17:30:43,840 [INFO] CodeGenerator:807 - code generatio: config db path: C:\ST\STM32CubeIDE_1.12.1\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.11.1.202404110753\\db\
+2024-06-24 17:30:43,985 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\license.tmp_save
+2024-06-24 17:30:44,151 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\license.tmp
+2024-06-24 17:30:44,321 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\gpio.tmp_save
+2024-06-24 17:30:44,481 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\gpio.tmp
+2024-06-24 17:30:45,178 [WARN] IPConfigManager:2982 - Warning: the RefConfig PWREx_EnableUSBVoltageDetector is not available in your config.xml file
+2024-06-24 17:30:45,192 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\cortex.tmp_save
+2024-06-24 17:30:45,400 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\cortex.tmp
+2024-06-24 17:30:45,459 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\stm32f7xx_it.c_save
+2024-06-24 17:30:45,596 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\stm32f7xx_it.c
+2024-06-24 17:30:45,604 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Inc\stm32f7xx_it.h_save
+2024-06-24 17:30:45,701 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Inc\stm32f7xx_it.h
+2024-06-24 17:30:45,746 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\stm32f7xx_hal_msp.c_save
+2024-06-24 17:30:45,942 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\stm32f7xx_hal_msp.c
+2024-06-24 17:30:45,949 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\system.tmp_save
+2024-06-24 17:30:46,039 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\system.tmp
+2024-06-24 17:30:46,083 [INFO] CodeEngine:311 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Inc\stm32f7xx_hal_conf.h_save
+2024-06-24 17:30:46,259 [INFO] CodeEngine:335 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Inc\stm32f7xx_hal_conf.h
+2024-06-24 17:30:46,303 [WARN] IPConfigManager:3513 - IP not found : USB_OTG
+2024-06-24 17:30:46,305 [WARN] CodeGenerator:3951 - IP not found : null
+2024-06-24 17:30:46,341 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Inc\main.h_save
+2024-06-24 17:30:46,519 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Inc\main.h
+2024-06-24 17:30:46,546 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\main.c_save
+2024-06-24 17:30:46,738 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\main.c
+2024-06-24 17:30:47,505 [INFO] ProjectBuilder:3163 - Time for Copy HAL[1] : 445mS.
+2024-06-24 17:30:47,512 [INFO] ProjectBuilder:4736 - Project Generator version: 4.3.0-B58
+2024-06-24 17:30:47,638 [INFO] ConfigFileManager:1503 - The Die is : DIE451
+2024-06-24 17:30:49,318 [INFO] ProjectBuilder:5002 - Time for Generating toolchain IDE Files: 1805mS.
+2024-06-24 17:30:49,319 [INFO] ProjectBuilder:3034 - Time for Copy CMSIS : 1mS.
+2024-06-24 17:30:49,327 [INFO] ProjectBuilder:3034 - Time for Copy CMSIS : 0mS.
+2024-06-24 19:11:17,784 [INFO] RtosManager:919 - Current active RTOS is FREERTOS [Cortex-M7NS]
+2024-06-24 19:11:18,546 [ERROR] RtosPanel:558 - Can not restore the selected Tab for FREERTOS(A reason can be that the tab is no more available.)
+2024-06-24 19:11:18,617 [ERROR] RtosPanel:558 - Can not restore the selected Tab for FREERTOS(A reason can be that the tab is no more available.)
+2024-06-24 19:11:25,393 [ERROR] RtosPanel:558 - Can not restore the selected Tab for FREERTOS(A reason can be that the tab is no more available.)
+2024-06-24 19:11:34,890 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 525380888 Bytes (1073741824)
+2024-06-24 19:11:36,092 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 557886744 Bytes (1073741824)
+2024-06-24 19:11:36,845 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 694723864 Bytes (1073741824)
+2024-06-24 19:11:54,874 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 436393976 Bytes (1073741824)
+2024-06-24 19:11:56,042 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 467851256 Bytes (1073741824)
+2024-06-24 19:11:56,722 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 574279672 Bytes (1073741824)
+2024-06-24 19:11:57,098 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: SPI
+2024-06-24 19:11:57,098 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: SPI
+2024-06-24 19:11:57,099 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: FREERTOS
+2024-06-24 19:11:57,099 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: SYS
+2024-06-24 19:11:57,099 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: RCC
+2024-06-24 19:11:57,099 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: USB_OTG_FS
+2024-06-24 19:11:57,099 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: NVIC
+2024-06-24 19:11:57,099 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: USART
+2024-06-24 19:11:57,100 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: GPIO
+2024-06-24 19:11:57,102 [INFO] CodeGenerator:807 - code generatio: config db path: C:\ST\STM32CubeIDE_1.12.1\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.11.1.202404110753\\db\
+2024-06-24 19:11:57,441 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\license.tmp_save
+2024-06-24 19:11:57,650 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\license.tmp
+2024-06-24 19:11:57,811 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\gpio.tmp_save
+2024-06-24 19:11:57,994 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\gpio.tmp
+2024-06-24 19:11:58,920 [WARN] IPConfigManager:2982 - Warning: the RefConfig PWREx_EnableUSBVoltageDetector is not available in your config.xml file
+2024-06-24 19:11:58,946 [INFO] Middleware:1439 - No code input for Bsp Dependency
+2024-06-24 19:11:58,964 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_inc.tmp_save
+2024-06-24 19:11:59,090 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_inc.tmp
+2024-06-24 19:11:59,104 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_kernelInit.tmp_save
+2024-06-24 19:11:59,204 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_kernelInit.tmp
+2024-06-24 19:11:59,217 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_kernelStart.tmp_save
+2024-06-24 19:11:59,307 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_kernelStart.tmp
+2024-06-24 19:11:59,328 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_typedefs.tmp_save
+2024-06-24 19:11:59,412 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_typedefs.tmp
+2024-06-24 19:11:59,426 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_vars.tmp_save
+2024-06-24 19:11:59,533 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_vars.tmp
+2024-06-24 19:11:59,548 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_pfp.tmp_save
+2024-06-24 19:11:59,664 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_pfp.tmp
+2024-06-24 19:11:59,684 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_obj_creat.tmp_save
+2024-06-24 19:11:59,826 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_obj_creat.tmp
+2024-06-24 19:11:59,845 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_default_thread.tmp_save
+2024-06-24 19:11:59,951 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_default_thread.tmp
+2024-06-24 19:11:59,966 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_threads.tmp_save
+2024-06-24 19:12:00,130 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_threads.tmp
+2024-06-24 19:12:00,147 [INFO] Middleware:1439 - No code input for Bsp Dependency
+2024-06-24 19:12:00,160 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_inc.tmp_save
+2024-06-24 19:12:00,269 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_inc.tmp
+2024-06-24 19:12:00,276 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_kernelInit.tmp_save
+2024-06-24 19:12:00,355 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_kernelInit.tmp
+2024-06-24 19:12:00,363 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_kernelStart.tmp_save
+2024-06-24 19:12:00,439 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_kernelStart.tmp
+2024-06-24 19:12:00,446 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_typedefs.tmp_save
+2024-06-24 19:12:00,525 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_typedefs.tmp
+2024-06-24 19:12:00,542 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_vars.tmp_save
+2024-06-24 19:12:00,629 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_vars.tmp
+2024-06-24 19:12:00,635 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_pfp.tmp_save
+2024-06-24 19:12:00,716 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_pfp.tmp
+2024-06-24 19:12:00,738 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_obj_creat.tmp_save
+2024-06-24 19:12:00,831 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_obj_creat.tmp
+2024-06-24 19:12:00,841 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_default_thread.tmp_save
+2024-06-24 19:12:00,930 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_default_thread.tmp
+2024-06-24 19:12:00,937 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_threads.tmp_save
+2024-06-24 19:12:01,011 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\rtos_threads.tmp
+2024-06-24 19:12:01,031 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Inc\FreeRTOSConfig.h_save
+2024-06-24 19:12:01,212 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Inc\FreeRTOSConfig.h
+2024-06-24 19:12:01,231 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\freertos.c_save
+2024-06-24 19:12:01,367 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\freertos.c
+2024-06-24 19:12:01,381 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\cortex.tmp_save
+2024-06-24 19:12:01,515 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\cortex.tmp
+2024-06-24 19:12:01,571 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\stm32f7xx_it.c_save
+2024-06-24 19:12:01,853 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\stm32f7xx_it.c
+2024-06-24 19:12:01,876 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Inc\stm32f7xx_it.h_save
+2024-06-24 19:12:01,995 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Inc\stm32f7xx_it.h
+2024-06-24 19:12:02,041 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\stm32f7xx_hal_msp.c_save
+2024-06-24 19:12:02,238 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\stm32f7xx_hal_msp.c
+2024-06-24 19:12:02,255 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\system.tmp_save
+2024-06-24 19:12:02,343 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\MXTmpFiles\system.tmp
+2024-06-24 19:12:02,359 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\stm32f7xx_hal_timebase_tim.c_save
+2024-06-24 19:12:02,494 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\stm32f7xx_hal_timebase_tim.c
+2024-06-24 19:12:02,533 [INFO] CodeEngine:311 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Inc\stm32f7xx_hal_conf.h_save
+2024-06-24 19:12:02,674 [INFO] CodeEngine:335 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Inc\stm32f7xx_hal_conf.h
+2024-06-24 19:12:02,726 [WARN] IPConfigManager:3513 - IP not found : USB_OTG
+2024-06-24 19:12:02,727 [WARN] CodeGenerator:3951 - IP not found : null
+2024-06-24 19:12:02,768 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Inc\main.h_save
+2024-06-24 19:12:02,908 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Inc\main.h
+2024-06-24 19:12:02,946 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\main.c_save
+2024-06-24 19:12:03,220 [INFO] CodeEngine:279 - Generated code: C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\Core\Src\main.c
+2024-06-24 19:12:03,976 [INFO] ProjectBuilder:3163 - Time for Copy HAL[1] : 397mS.
+2024-06-24 19:12:03,984 [INFO] ProjectBuilder:4736 - Project Generator version: 4.3.0-B58
+2024-06-24 19:12:04,112 [INFO] ConfigFileManager:1503 - The Die is : DIE451
+2024-06-24 19:12:05,699 [INFO] ProjectBuilder:5002 - Time for Generating toolchain IDE Files: 1716mS.
+2024-06-24 19:12:05,701 [INFO] ProjectBuilder:3034 - Time for Copy CMSIS : 1mS.
+2024-06-24 19:12:05,716 [INFO] ProjectBuilder:3034 - Time for Copy CMSIS : 0mS.

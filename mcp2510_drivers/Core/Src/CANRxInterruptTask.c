@@ -20,7 +20,7 @@ void CANRxInterruptTask(void* arg)
 void CANRxInterrupt()
 {
 	uint16_t GPIO_Pin = 0;
-	osMessageQueueGet(CANInterruptQueue, &GPIO_Pin, 0, osWaitForever);
+	osStatus_t status = osMessageQueueGet(CANInterruptQueue, &GPIO_Pin, 0, osWaitForever);
 
 	uint32_t ID = 0;
 	uint8_t DLC = 0;

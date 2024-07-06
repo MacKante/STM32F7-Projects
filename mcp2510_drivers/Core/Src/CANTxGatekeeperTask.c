@@ -49,7 +49,7 @@ void CANTxGatekeeperTask(void* arg) {
 
 void CANTxGatekeeper(CANMsg *msg) {
 	// Acquire message to send from queue
-	osMessageQueueGet(CANTxMessageQueue, msg, NULL, osWaitForever);
+	osStatus_t status = osMessageQueueGet(CANTxMessageQueue, msg, NULL, osWaitForever);
 
 	// Wait for mutex
 	if ( osMutexWait(SPIMutexHandle, 0) == osOK )

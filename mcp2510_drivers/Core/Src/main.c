@@ -64,7 +64,7 @@ const osThreadAttr_t defaultTask_attributes = {
 osMutexId_t CANTxGateKeeperTaskHandle;
 const osThreadAttr_t CANTxGateKeeperTask_attributes = {
   .name = "CANTxGateKeeperTask",
-  .priority = (osPriority) osPriorityNormal1,
+  .priority = (osPriority) osPriorityNormal,
   .stack_size = DEFAULT_TASK_STACK_SIZE
 };
 
@@ -72,21 +72,21 @@ const osThreadAttr_t CANTxGateKeeperTask_attributes = {
 osThreadId_t CANRXInterruptTaskHandle;
 const osThreadAttr_t CANRXInterruptTask_attributes = {
   .name = "CANRXInterruptTask",
-  .priority = (osPriority_t) osPriorityNormal1,
+  .priority = (osPriority_t) osPriorityBelowNormal,
   .stack_size = DEFAULT_TASK_STACK_SIZE
 };
 
 osThreadId_t queueMessageTask1Handle;
 const osThreadAttr_t queueMessageTask1_attributes = {
   .name = "queueMessageTask1",
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityLow,
   .stack_size = DEFAULT_TASK_STACK_SIZE
 };
 
 osThreadId_t queueMessageTask2Handle;
 const osThreadAttr_t queueMessageTask2_attributes = {
   .name = "queueMessageTask2",
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityLow,
   .stack_size = DEFAULT_TASK_STACK_SIZE
 };
 
@@ -98,12 +98,20 @@ const osMutexAttr_t SPIMutex_attributes = {
 osMessageQueueId_t CANInterruptQueue;
 osMessageQueueId_t CANTxMessageQueue;
 
-CANPeripheral peripheral = {
+CANPeripheral peripheral1 = {
   .CS_PORT= CAN_CS_GPIO_Port,
   .CS_PIN = CAN_CS_Pin,
   .hspi = &hspi1
 };
 
+CANPeripheral peripheral2 = {
+  .CS_PORT= CAN2_CS_GPIO_Port,
+  .CS_PIN = CAN2_CS_Pin,
+  .hspi = &hspi4
+};
+
+uint8_t RXPin;
+uint8_t CANINTFlag = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -158,17 +166,23 @@ int main(void)
   MX_SPI1_Init();
   MX_SPI4_Init();
   /* USER CODE BEGIN 2 */
-  ConfigureCANSPI(&peripheral);
+  ConfigureCANSPI(&peripheral1);
+  ConfigureCANSPI(&peripheral2);
+
+  CANMsg msg1 = {
+  			.DLC = 1,
+  			.ID = 0,
+  			.extendedID = 0xCFCFCFC,
+  			.data = {0xCC}
+  };
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
-  osKernelInitialize();
+  // osKernelInitialize();
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
-  /* Definitions for SPIMutex */
-  SPIMutexHandle = osMutexNew(&SPIMutex_attributes); //unused
-
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
@@ -181,8 +195,6 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
-  CANInterruptQueue = osMessageQueueNew(10, sizeof(uint16_t), NULL);
-  CANTxMessageQueue = osMessageQueueNew(10, sizeof(CANMsg), NULL);
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
@@ -191,16 +203,6 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
-  /* creation of CANRXInterruptTask*/
-  CANRXInterruptTaskHandle = osThreadNew(CANRxInterruptTask, NULL, &CANRXInterruptTask_attributes);
-
-  /* creation of CANTxGatekeeperTask*/
-  CANTxGateKeeperTaskHandle = osThreadNew(CANTxGatekeeperTask, NULL, &CANTxGateKeeperTask_attributes);
-
-  /* creation of queue CAN message tasks */
-  queueMessageTask1Handle = osThreadNew(queueMessageTask1, NULL, &queueMessageTask1_attributes);
-  // queueMessageTask2Handle = osThreadNew(queueMessageTask2, NULL, &queueMessageTask2_attributes);
-
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -208,7 +210,7 @@ int main(void)
   /* USER CODE END RTOS_EVENTS */
 
   /* Start scheduler */
-  osKernelStart();
+  // osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
 
@@ -216,6 +218,40 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
+	  CANINTFlag = 1;
+
+	  uint8_t buf1;
+	  uint8_t buf2;
+	  CAN_IC_READ_REGISTER(0xFE, &buf1, &peripheral1);
+	  CAN_IC_READ_REGISTER(0xFE, &buf2, &peripheral2);
+
+	  uint8_t channel = sendExtendedCANMessage(&msg1, &peripheral1);
+
+	  // read CANINTE, CANINTE.TXNIE must be set
+	  CAN_IC_READ_REGISTER(CANINTE, &buf1, &peripheral1);
+
+	  // read TXBNCTRL,
+	  uint8_t TXBCTRLStatus;
+	  CAN_IC_READ_REGISTER((TXB0CTRL + 16*(channel)), &buf2, &peripheral1);
+
+	  uint8_t CANINTFStatus;
+	  CAN_IC_READ_REGISTER(CANINTF, &CANINTFStatus, &peripheral1);
+
+	  uint8_t EFLGStatus;
+	  CAN_IC_READ_REGISTER(EFLG, &CANINTFStatus, &peripheral1);
+
+	  uint32_t ID = 0;
+	  uint8_t DLC = 0;
+	  uint8_t data[8] = {0};
+
+	  receiveCANMessage(RXPin, &ID, &DLC, data, &peripheral1);
+
+	  CAN_IC_READ_REGISTER(0x0E, &buf1, &peripheral1);
+
+	  RXPin = 2;
+
+	 // CAN_IC_READ_REGISTER(0x0E, &buf2, &peripheral2);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -335,11 +371,11 @@ static void MX_SPI4_Init(void)
   hspi4.Instance = SPI4;
   hspi4.Init.Mode = SPI_MODE_MASTER;
   hspi4.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi4.Init.DataSize = SPI_DATASIZE_4BIT;
+  hspi4.Init.DataSize = SPI_DATASIZE_8BIT;
   hspi4.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi4.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi4.Init.NSS = SPI_NSS_SOFT;
-  hspi4.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi4.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
   hspi4.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi4.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi4.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -472,9 +508,9 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(USER_Btn_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : CAN2_RX1BF_Pin CAN2_RX0BF_Pin */
-  GPIO_InitStruct.Pin = CAN2_RX1BF_Pin|CAN2_RX0BF_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  /*Configure GPIO pins : CAN2_RX1BF_Pin CAN2_RX0BF_Pin CAN_RX1BF_Pin */
+  GPIO_InitStruct.Pin = CAN2_RX1BF_Pin|CAN2_RX0BF_Pin|CAN_RX1BF_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
@@ -486,8 +522,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Alternate = GPIO_AF11_ETH;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : RMII_REF_CLK_Pin RMII_MDIO_Pin RMII_CRS_DV_Pin */
-  GPIO_InitStruct.Pin = RMII_REF_CLK_Pin|RMII_MDIO_Pin|RMII_CRS_DV_Pin;
+  /*Configure GPIO pins : RMII_REF_CLK_Pin RMII_MDIO_Pin */
+  GPIO_InitStruct.Pin = RMII_REF_CLK_Pin|RMII_MDIO_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
@@ -501,24 +537,18 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(CAN_CS_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : CAN2_INT_Pin */
+  GPIO_InitStruct.Pin = CAN2_INT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(CAN2_INT_GPIO_Port, &GPIO_InitStruct);
+
   /*Configure GPIO pins : LD1_Pin LD3_Pin LD2_Pin */
   GPIO_InitStruct.Pin = LD1_Pin|LD3_Pin|LD2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : CAN_RX1BF_Pin */
-  GPIO_InitStruct.Pin = CAN_RX1BF_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(CAN_RX1BF_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : CAN2_INT_Pin */
-  GPIO_InitStruct.Pin = CAN2_INT_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(CAN2_INT_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : RMII_TXD1_Pin */
   GPIO_InitStruct.Pin = RMII_TXD1_Pin;
@@ -573,10 +603,20 @@ static void MX_GPIO_Init(void)
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	if ((GPIO_Pin == CAN_RX0BF_Pin) || (GPIO_Pin == CAN_RX1BF_Pin)) {
-		osMessageQueuePut(CANInterruptQueue, &GPIO_Pin, 0, 0);
-		//canReceive = 1;
+	if (CANINTFlag == 0) {
+		return;
 	}
+
+	if (GPIO_Pin == CAN2_RX0BF_Pin) {
+		RXPin = 0;
+	}
+	else if (GPIO_Pin == CAN2_RX1BF_Pin) {
+		RXPin = 1;
+	}
+//	if ((GPIO_Pin == CAN2_RX0BF_Pin) || (GPIO_Pin == CAN2_RX1BF_Pin)) {
+//		osMessageQueuePut(CANInterruptQueue, &GPIO_Pin, 0, 0);
+//		//canReceive = 1;
+//	}
 }
 
 /* USER CODE END 4 */

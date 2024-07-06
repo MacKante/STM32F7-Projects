@@ -76,8 +76,8 @@ void Error_Handler(void);
 #define RMII_MDIO_GPIO_Port GPIOA
 #define CAN_CS_Pin GPIO_PIN_4
 #define CAN_CS_GPIO_Port GPIOA
-#define RMII_CRS_DV_Pin GPIO_PIN_7
-#define RMII_CRS_DV_GPIO_Port GPIOA
+#define CAN2_INT_Pin GPIO_PIN_7
+#define CAN2_INT_GPIO_Port GPIOA
 #define RMII_RXD0_Pin GPIO_PIN_4
 #define RMII_RXD0_GPIO_Port GPIOC
 #define RMII_RXD1_Pin GPIO_PIN_5
@@ -87,8 +87,6 @@ void Error_Handler(void);
 #define CAN_RX1BF_Pin GPIO_PIN_12
 #define CAN_RX1BF_GPIO_Port GPIOF
 #define CAN_RX1BF_EXTI_IRQn EXTI15_10_IRQn
-#define CAN2_INT_Pin GPIO_PIN_7
-#define CAN2_INT_GPIO_Port GPIOE
 #define RMII_TXD1_Pin GPIO_PIN_13
 #define RMII_TXD1_GPIO_Port GPIOB
 #define LD3_Pin GPIO_PIN_14

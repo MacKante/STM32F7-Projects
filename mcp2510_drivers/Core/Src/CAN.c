@@ -39,9 +39,11 @@ void CAN_IC_READ_REGISTER(uint8_t address, uint8_t* buffer, CANPeripheral *perip
 	// 3rd byte: dont care byte
 	uint8_t packet[3] = {0x03, address, 0x00};
 
+	HAL_StatusTypeDef status;
+
 	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_RESET); // Initialize instruction by setting CS pin low
-	HAL_SPI_Transmit(peripheral->hspi, packet, 2, 100U); //transmit
-	HAL_SPI_Receive(peripheral->hspi, buffer, 1, 100U); //receive register contents
+	status = HAL_SPI_Transmit(peripheral->hspi, packet, 2, 100U); //transmit
+	status = HAL_SPI_Receive(peripheral->hspi, buffer, 1, 100U); //receive register contents
 	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_SET); // Terminate instruction by setting CS pin high
 }
 
@@ -59,8 +61,10 @@ void CAN_IC_WRITE_REGISTER(uint8_t address, uint8_t value, CANPeripheral *periph
 	// 3rd byte: value to write
 	uint8_t packet[3] = {0x02, address, value};
 
+	HAL_StatusTypeDef status;
+
 	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_RESET); //set CS pin low
-	HAL_SPI_Transmit(peripheral->hspi, packet, 3, 100U);	//transmit
+	status = HAL_SPI_Transmit(peripheral->hspi, packet, 3, 100U);	//transmit
 	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_SET); //set CS pin high
 }
 
@@ -76,8 +80,11 @@ void CAN_IC_WRITE_REGISTER_BITWISE(uint8_t address, uint8_t mask, uint8_t value,
 	// 0x05 specifies bit-write instruction
 	// mask specifies which bits can be modified (1 means bit can be modified)
 	uint8_t packet[4] = {0x05, address, mask, value};
+
+	HAL_StatusTypeDef status;
+
 	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_RESET); //set CS pin low
-	HAL_SPI_Transmit(peripheral->hspi, packet, 4, 100U); //transmit
+	status = HAL_SPI_Transmit(peripheral->hspi, packet, 4, 100U); //transmit
 	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_SET); //set CS pin high
 }
 
@@ -90,16 +97,23 @@ void CAN_IC_WRITE_REGISTER_BITWISE(uint8_t address, uint8_t mask, uint8_t value,
   */
 void ConfigureCANSPI(CANPeripheral *peripheral)
 {
-	uint8_t resetCommand = 0xa0; //instruction to reset IC to default
+	uint8_t resetCommand = 0xc0; //instruction to reset IC to default
 	uint8_t CONFIG_CNF1 = 0x00; //BRP = 0 to make tq = 250ns and a SJW of 1Tq
 	uint8_t CONFIG_CNF2 = 0xd8; //PRSEG = 0, PHSEG1 = 3, SAM = 0, BTLMODE = 1
 	uint8_t CONFIG_CNF3 = 0x01; //WAFKIL disabled, PHSEG2 = 2 (BTL enabled) but PHSEG = 1 makes it backwards compatible???? wat
 
+	HAL_StatusTypeDef status;
+
 	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_RESET);
-	HAL_SPI_Transmit(peripheral->hspi, &resetCommand, 1, 100U);  //reset IC to default
+	status = HAL_SPI_Transmit(peripheral->hspi, &resetCommand, 1, 100U);  //reset IC to default
 	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_SET);
 
 	CAN_IC_WRITE_REGISTER(0x0f, 0x80, peripheral); //Ensure IC is in configuration mode
+
+	uint8_t CANSTAT_BUF = 0;
+	while (CANSTAT_BUF != 0x80) {
+		CAN_IC_READ_REGISTER(0x0E, &CANSTAT_BUF, peripheral);
+	}
 
 	CAN_IC_WRITE_REGISTER(CNF1, CONFIG_CNF1, peripheral); //configure CNF1
 	CAN_IC_WRITE_REGISTER(CNF2, CONFIG_CNF2, peripheral); //configure CNF2
@@ -114,10 +128,15 @@ void ConfigureCANSPI(CANPeripheral *peripheral)
 	CAN_IC_WRITE_REGISTER(RXB0CTRL, 0x60, peripheral); //accept any message on buffer 0
 	CAN_IC_WRITE_REGISTER(RXB1CTRL, 0x60, peripheral); //accept any message on buffer 1
 
-	CAN_IC_WRITE_REGISTER(0x0f, 0x04, peripheral); //Put IC in normal operation mode with CLKOUT pin enable and 1:1 prescaler
+	// CAN_IC_WRITE_REGISTER(0x0f, 0x04, peripheral); //Put IC in normal operation mode with CLKOUT pin enable and 1:1 prescaler
 
 	#if CAN_TEST_SETUP
 	CAN_IC_WRITE_REGISTER(0x0F, 0x44, peripheral);	// Put IC in loop-back mode for testing as well as enable CLKOUT pin with 1:1 prescaler
+
+	while (CANSTAT_BUF != 0x40) {
+		CAN_IC_READ_REGISTER(0x0E, &CANSTAT_BUF, peripheral);
+	}
+
 	#endif
 }
 
@@ -155,7 +174,7 @@ uint8_t checkAvailableTXChannel(CANPeripheral *peripheral)
         }
 
         prevWakeTime += TX_CHANNEL_CHECK_DELAY;
-        osDelayUntil(prevWakeTime);
+        // osDelayUntil(prevWakeTime);
 
     }
 }
@@ -166,7 +185,7 @@ uint8_t checkAvailableTXChannel(CANPeripheral *peripheral)
   * @param None
   * @retval None
   */
-void sendCANMessage(CANMsg *msg, CANPeripheral *peripheral)
+uint8_t sendCANMessage(CANMsg *msg, CANPeripheral *peripheral)
 {
 	uint8_t channel = checkAvailableTXChannel(peripheral);
     uint8_t initialBufferAddress = TXB0CTRL + 16*(channel);
@@ -206,7 +225,7 @@ void sendCANMessage(CANMsg *msg, CANPeripheral *peripheral)
   * @param None
   * @retval None
   */
-void sendExtendedCANMessage(CANMsg *msg, CANPeripheral *peripheral)
+uint8_t sendExtendedCANMessage(CANMsg *msg, CANPeripheral *peripheral)
 {
 	// uint8_t initialBufferAddress = TXB0CTRL + 16*(channel); //TXB0CTRL for channel 1, TXB1CTRL for channel 2, TXB2CTRL for channel 3
     uint8_t channel = checkAvailableTXChannel(peripheral);
@@ -290,3 +309,14 @@ void receiveCANMessage(uint8_t channel, uint32_t* ID, uint8_t* DLC, uint8_t* dat
 	return;
 }
 
+CANINTERFACETASK(){
+
+#grab command from queue
+
+	SWITCH (command)
+					case send
+						Sendmessage()
+					case receive
+						receivemessage(pin)
+
+}
