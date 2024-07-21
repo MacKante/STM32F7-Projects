@@ -1,0 +1,14 @@
+/*
+ * CANInterruptTask.h
+ *
+ *  Created on: Jul 20, 2024
+ *      Author: MacKante
+ */
+
+#ifndef INC_CANINTERRUPTTASK_H_
+#define INC_CANINTERRUPTTASK_H_
+
+#include "CAN.h"
+extern CANCommandQ
+
+#endif /* INC_CANINTERRUPTTASK_H_ */

@@ -13,14 +13,13 @@ void CANRxInterruptTask(void* arg)
 {
 	for(;;) {
 		CANRxInterrupt();
-		osDelay(100);
 	}
 }
 
 void CANRxInterrupt()
 {
-	uint16_t GPIO_Pin = 0;
-	osStatus_t status = osMessageQueueGet(CANInterruptQueue, &GPIO_Pin, 0, osWaitForever);
+	uint8_t channel;
+	osStatus_t status = osMessageQueueGet(CANRxMessageQueue, &channel, 0, osWaitForever);
 
 	uint32_t ID = 0;
 	uint8_t DLC = 0;
@@ -28,15 +27,7 @@ void CANRxInterrupt()
 
 	if (osMutexWait(SPIMutexHandle, 0) == osOK)
 	{
-		if(GPIO_Pin == CAN_RX0BF_Pin)
-		{
-			receiveCANMessage(0, &ID, &DLC, data, &peripheral);
-		}
-		else if (GPIO_Pin == CAN_RX1BF_Pin)
-		{
-			receiveCANMessage(1, &ID, &DLC, data, &peripheral);
-		}
-
+		receiveCANMessage(channel, &ID, &DLC, data, &peripheral);
 		osMutexRelease(SPIMutexHandle);
 	}
 

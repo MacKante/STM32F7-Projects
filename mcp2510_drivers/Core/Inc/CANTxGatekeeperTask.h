@@ -9,6 +9,7 @@
 #pragma once
 
 #include "cmsis_os.h"
+#include "cmsis_os2.h"
 #include "CAN.h"
 
 void CANTxGatekeeperTask(void* arg);

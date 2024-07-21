@@ -18,8 +18,8 @@
 #define TEC         0x1C
 #define REC         0x1D
 #define EFLG        0x2D
-#define CANCTRL     0xXF    //todo
-#define CANSTAT     0xXE    //todo
+#define CANCTRL     0x0F    // 0xXF
+#define CANSTAT     0x0E    // 0xXE
 #define TXRTSCTRL   0x0D
 #define BFPCTRL     0x0C
 #define TXB0CTRL    0x30    //these are the three trasmit channels

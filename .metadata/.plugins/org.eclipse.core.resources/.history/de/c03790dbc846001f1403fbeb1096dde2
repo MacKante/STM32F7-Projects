@@ -1,0 +1,17 @@
+/*
+ * CANInterruptTask.h
+ *
+ *  Created on: Jul 20, 2024
+ *      Author: MacKante
+ */
+
+#ifndef INC_CANINTERRUPTTASK_H_
+#define INC_CANINTERRUPTTASK_H_
+
+#include "CAN.h"
+#include "cmsis_os.h"
+#include "cmsis_os2.h"
+
+extern osMessageQueueId_t CANCommandQueue;
+
+#endif /* INC_CANINTERRUPTTASK_H_ */

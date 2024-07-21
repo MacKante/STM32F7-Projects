@@ -64,8 +64,10 @@ void Error_Handler(void);
 #define USER_Btn_EXTI_IRQn EXTI15_10_IRQn
 #define CAN2_RX1BF_Pin GPIO_PIN_1
 #define CAN2_RX1BF_GPIO_Port GPIOF
+#define CAN2_RX1BF_EXTI_IRQn EXTI1_IRQn
 #define CAN2_RX0BF_Pin GPIO_PIN_2
 #define CAN2_RX0BF_GPIO_Port GPIOF
+#define CAN2_RX0BF_EXTI_IRQn EXTI2_IRQn
 #define MCO_Pin GPIO_PIN_0
 #define MCO_GPIO_Port GPIOH
 #define RMII_MDC_Pin GPIO_PIN_1
@@ -78,6 +80,7 @@ void Error_Handler(void);
 #define CAN_CS_GPIO_Port GPIOA
 #define CAN2_INT_Pin GPIO_PIN_7
 #define CAN2_INT_GPIO_Port GPIOA
+#define CAN2_INT_EXTI_IRQn EXTI9_5_IRQn
 #define RMII_RXD0_Pin GPIO_PIN_4
 #define RMII_RXD0_GPIO_Port GPIOC
 #define RMII_RXD1_Pin GPIO_PIN_5

@@ -166,3 +166,66 @@ Command-line arguments:  -os win32 -ws win32 -arch x86_64
 
 !ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-07-06 11:35:36.867
 !MESSAGE Started RMI Server, listening on port 41337
+!SESSION 2024-07-20 09:42:28.753 -----------------------------------------------
+eclipse.buildId=Version 1.15.1
+java.version=17.0.8.1
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-07-20 09:42:58.364
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-07-20 09:42:58.375
+!MESSAGE Log4j2 initialized with config file C:\Users\MacKante\Desktop\STM32F7-Projects\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.toolchain.arm-none 4 4 2024-07-20 09:43:02.770
+!MESSAGE Failed to get MCU from name "" in toolchain com.st.stm32cube.ide.mcu.gnu.managedbuild.toolchain.base.1162906100
+
+!ENTRY com.st.stm32cube.ide.mcu.toolchain.arm-none 4 4 2024-07-20 09:43:02.770
+!MESSAGE Failed to get MCU from name "" in toolchain com.st.stm32cube.ide.mcu.gnu.managedbuild.toolchain.base.1162906100
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-07-20 09:43:09.740
+!MESSAGE Started RMI Server, listening on port 41337
+!SESSION 2024-07-20 11:32:19.197 -----------------------------------------------
+eclipse.buildId=Version 1.15.1
+java.version=17.0.8.1
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-07-20 11:32:34.984
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-07-20 11:32:34.992
+!MESSAGE Log4j2 initialized with config file C:\Users\MacKante\Desktop\STM32F7-Projects\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.toolchain.arm-none 4 4 2024-07-20 11:32:39.077
+!MESSAGE Failed to get MCU from name "" in toolchain com.st.stm32cube.ide.mcu.gnu.managedbuild.toolchain.base.1162906100
+
+!ENTRY com.st.stm32cube.ide.mcu.toolchain.arm-none 4 4 2024-07-20 11:32:39.078
+!MESSAGE Failed to get MCU from name "" in toolchain com.st.stm32cube.ide.mcu.gnu.managedbuild.toolchain.base.1162906100
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-07-20 11:32:44.063
+!MESSAGE Started RMI Server, listening on port 41337
+!SESSION 2024-07-20 13:15:34.519 -----------------------------------------------
+eclipse.buildId=Version 1.15.1
+java.version=17.0.8.1
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-07-20 13:15:51.864
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-07-20 13:15:51.867
+!MESSAGE Log4j2 initialized with config file C:\Users\MacKante\Desktop\STM32F7-Projects\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.toolchain.arm-none 4 4 2024-07-20 13:15:56.200
+!MESSAGE Failed to get MCU from name "" in toolchain com.st.stm32cube.ide.mcu.gnu.managedbuild.toolchain.base.1162906100
+
+!ENTRY com.st.stm32cube.ide.mcu.toolchain.arm-none 4 4 2024-07-20 13:15:56.200
+!MESSAGE Failed to get MCU from name "" in toolchain com.st.stm32cube.ide.mcu.gnu.managedbuild.toolchain.base.1162906100
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-07-20 13:16:00.004
+!MESSAGE Started RMI Server, listening on port 41337

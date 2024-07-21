@@ -3,6 +3,7 @@
 #include "main.h"
 #include <stdint.h>
 #include "cmsis_os.h"
+#include "cmsis_os2.h"
 #include "CANRegisters.h"
 
 typedef struct {
@@ -18,6 +19,12 @@ typedef struct {
     SPI_HandleTypeDef *hspi;
 } CANPeripheral;
 
+typedef struct {
+	uint32_t ID = 0;
+	uint8_t DLC = 0;
+	uint8_t data[8] = {0};
+} ReceiveMsg;
+
 #define TX_CHANNEL_CHECK_DELAY 1
 
 #define CAN_TEST_SETUP 1
@@ -30,8 +37,6 @@ uint8_t sendCANMessage(CANMsg *msg, CANPeripheral *peripheral);
 uint8_t sendExtendedCANMessage(CANMsg *msg, CANPeripheral *peripheral);
 void receiveCANMessage(uint8_t channel, uint32_t* ID, uint8_t* DLC, uint8_t* data, CANPeripheral *peripheral);
 uint8_t checkAvailableTXChannel(CANPeripheral *peripheral);
-
-extern uint8_t canReceive;
 
 extern SPI_HandleTypeDef hspi1;
 extern osMutexId_t SPIMutexHandle;

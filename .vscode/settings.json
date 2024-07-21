@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "canregisters.h": "c"
+        "canregisters.h": "c",
+        "cmsis_os.h": "c"
     }
 }

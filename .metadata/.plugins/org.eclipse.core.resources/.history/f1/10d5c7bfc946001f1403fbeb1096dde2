@@ -1,0 +1,45 @@
+/*
+ * CANCommandTask.c
+ *
+ *  Created on: Jul 6, 2024
+ *      Author: MacKante
+ */
+
+#include "CAN.h"
+#include "CANCommandTask.h"
+
+
+void CANCommandTask(void* arg) {
+	for(;;) {
+		osStatus_t status = osMessageQueueGet(CANTxMessageQueue, msg, NULL, osWaitForever);
+	}
+}
+
+
+void RUN_CAN_COMMAND(CAN_COMMAND command, CANPeripheral peripheral) {
+    switch(command) {
+        case RX0IF:
+            // receive buffer 0
+        	// may not need this
+        case RX1IF:
+            // receive buffer 1
+        	// may not need this
+        case TX0IF:
+            // clear bit
+            CAN_IC_WRITE_REGISTER_BITWISE(CANINTF, 0x04, 0x04, &peripheral);
+        case TX1IF:
+            // clear bit
+            CAN_IC_WRITE_REGISTER_BITWISE(CANINTF, 0x8, 0x8, &peripheral);
+        case TX2IF:
+            // clear bit
+            CAN_IC_WRITE_REGISTER_BITWISE(CANINTF, 0x10, 0x10, &peripheral);
+        case ERRIF:
+            // check ELFG register
+            // clear bit
+        case WAKIF:
+            // do nothing
+        case MERRF:
+            // message failed to send check TXBnCTRL.TXERR bit
+            // clear bit
+    }
+}

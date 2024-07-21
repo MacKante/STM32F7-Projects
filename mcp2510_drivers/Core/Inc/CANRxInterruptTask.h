@@ -8,6 +8,7 @@
 #pragma once
 
 #include "cmsis_os.h"
+#include "cmsis_os2.h"
 #include "CAN.h"
 
 void CANRxInterruptTask(void* arg);
@@ -15,6 +16,6 @@ void CANRxInterrupt();
 
 extern SPI_HandleTypeDef hspi1;
 extern osMutexId_t SPIMutexHandle;
-extern osMessageQueueId_t CANInterruptQueue;
+extern osMessageQueueId_t CANRxMessageQueue;
 
 extern CANPeripheral peripheral;

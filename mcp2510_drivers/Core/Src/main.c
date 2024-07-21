@@ -90,14 +90,18 @@ const osThreadAttr_t queueMessageTask2_attributes = {
   .stack_size = DEFAULT_TASK_STACK_SIZE
 };
 
+/* Definition for SPIMutex */
 osMutexId_t SPIMutexHandle;
 const osMutexAttr_t SPIMutex_attributes = {
   .name = "SPIMutex"
 };
 
-osMessageQueueId_t CANInterruptQueue;
+/* Queue Definitions*/
+osMessageQueueId_t CANRxMessageQueue;
 osMessageQueueId_t CANTxMessageQueue;
+osMessageQueueId_t CANCommandQueue;
 
+/* CAN Peripherals - Temporary */
 CANPeripheral peripheral1 = {
   .CS_PORT= CAN_CS_GPIO_Port,
   .CS_PIN = CAN_CS_Pin,
@@ -109,6 +113,9 @@ CANPeripheral peripheral2 = {
   .CS_PIN = CAN2_CS_Pin,
   .hspi = &hspi4
 };
+
+ReceiveMsg RX0Buffer;
+ReceiveMsg RX1Buffer;
 
 uint8_t RXPin;
 uint8_t CANINTFlag = 0;
@@ -166,8 +173,19 @@ int main(void)
   MX_SPI1_Init();
   MX_SPI4_Init();
   /* USER CODE BEGIN 2 */
+
+  // Disable CAN Interrupt pins cuz the IC goes crazy on setup
+//  HAL_NVIC_DisableIRQ(IRQn);
+//  HAL_NVIC_DisableIRQ(IRQn);
+//  HAL_NVIC_DisableIRQ(IRQn);
+
   ConfigureCANSPI(&peripheral1);
   ConfigureCANSPI(&peripheral2);
+
+  // Re-enable CAN Interrupt pins when ready for normal operation
+//  HAL_NVIC_EnableIRQ(IRQn);
+//  HAL_NVIC_EnableIRQ(IRQn);
+//  HAL_NVIC_EnableIRQ(IRQn);
 
   CANMsg msg1 = {
   			.DLC = 1,
@@ -179,10 +197,14 @@ int main(void)
   /* USER CODE END 2 */
 
   /* Init scheduler */
-  // osKernelInitialize();
+  osKernelInitialize();
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
+
+  /* SPI Mutex */
+  SPIMutexHandle = osMutexNew(&SPIMutex_attributes);
+
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
@@ -195,11 +217,14 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
+  CANCommandQueue = osMessageQueueNew(15, sizeof(uint8_t), NULL);
+  CANTxMessageQueue = osMessageQueueNew(10, sizeof(CANMsg), NULL);
+  CANRxMessageQueue = osMessageQueueNew(3, sizeof(uint8_t), NULL);
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
   /* creation of defaultTask */
-  // defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -210,7 +235,7 @@ int main(void)
   /* USER CODE END RTOS_EVENTS */
 
   /* Start scheduler */
-  // osKernelStart();
+  osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
 
@@ -219,39 +244,37 @@ int main(void)
   while (1)
   {
 
-	  CANINTFlag = 1;
-
-	  uint8_t buf1;
-	  uint8_t buf2;
-	  CAN_IC_READ_REGISTER(0xFE, &buf1, &peripheral1);
-	  CAN_IC_READ_REGISTER(0xFE, &buf2, &peripheral2);
-
-	  uint8_t channel = sendExtendedCANMessage(&msg1, &peripheral1);
-
-	  // read CANINTE, CANINTE.TXNIE must be set
-	  CAN_IC_READ_REGISTER(CANINTE, &buf1, &peripheral1);
-
-	  // read TXBNCTRL,
-	  uint8_t TXBCTRLStatus;
-	  CAN_IC_READ_REGISTER((TXB0CTRL + 16*(channel)), &buf2, &peripheral1);
-
-	  uint8_t CANINTFStatus;
-	  CAN_IC_READ_REGISTER(CANINTF, &CANINTFStatus, &peripheral1);
-
-	  uint8_t EFLGStatus;
-	  CAN_IC_READ_REGISTER(EFLG, &CANINTFStatus, &peripheral1);
-
-	  uint32_t ID = 0;
-	  uint8_t DLC = 0;
-	  uint8_t data[8] = {0};
-
-	  receiveCANMessage(RXPin, &ID, &DLC, data, &peripheral1);
-
-	  CAN_IC_READ_REGISTER(0x0E, &buf1, &peripheral1);
-
-	  RXPin = 2;
-
-	 // CAN_IC_READ_REGISTER(0x0E, &buf2, &peripheral2);
+//	  CANINTFlag = 1;
+//
+//	  uint8_t buf1;
+//	  uint8_t buf2;
+//	  CAN_IC_READ_REGISTER(0xFE, &buf1, &peripheral1);
+//	  CAN_IC_READ_REGISTER(0xFE, &buf2, &peripheral2);
+//
+//	  uint8_t channel = sendExtendedCANMessage(&msg1, &peripheral1);
+//
+//	  // read CANINTE, CANINTE.TXNIE must be set
+//	  CAN_IC_READ_REGISTER(CANINTE, &buf1, &peripheral1);
+//
+//	  uint8_t TXBCTRLStatus;
+//	  CAN_IC_READ_REGISTER((TXB0CTRL + 16*(channel)), &buf2, &peripheral1);
+//
+//	  uint8_t CANINTFStatus;
+//	  CAN_IC_READ_REGISTER(CANINTF, &CANINTFStatus, &peripheral1);
+//
+//	  uint8_t EFLGStatus;
+//	  CAN_IC_READ_REGISTER(EFLG, &CANINTFStatus, &peripheral1);
+//
+//	  uint32_t ID = 0;
+//	  uint8_t DLC = 0;
+//	  uint8_t data[8] = {0};
+//
+//	  receiveCANMessage(RXPin, &ID, &DLC, data, &peripheral1);
+//	  CAN_IC_READ_REGISTER(0x0E, &buf1, &peripheral1);
+//
+//	  RXPin = 2;
+//
+//	  CAN_IC_READ_REGISTER(0x0E, &buf2, &peripheral2);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -592,6 +615,15 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI1_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI2_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(EXTI2_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
@@ -603,20 +635,14 @@ static void MX_GPIO_Init(void)
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	if (CANINTFlag == 0) {
-		return;
-	}
+	switch (GPIO_Pin) {
+		case CAN_INT_Pin:
+				// read the CANINTF register
+		case CAN_RX0BF_Pin:
 
-	if (GPIO_Pin == CAN2_RX0BF_Pin) {
-		RXPin = 0;
+		case CAN_RX1BF_Pin:
+
 	}
-	else if (GPIO_Pin == CAN2_RX1BF_Pin) {
-		RXPin = 1;
-	}
-//	if ((GPIO_Pin == CAN2_RX0BF_Pin) || (GPIO_Pin == CAN2_RX1BF_Pin)) {
-//		osMessageQueuePut(CANInterruptQueue, &GPIO_Pin, 0, 0);
-//		//canReceive = 1;
-//	}
 }
 
 /* USER CODE END 4 */
@@ -634,7 +660,7 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    // osDelay(1);
   }
   /* USER CODE END 5 */
 }

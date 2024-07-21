@@ -3,26 +3,6 @@
 // defined this so I could say "for ever" in an  infinite for loop
 #define ever (;;)
 
-//TODO: ADD A FUNCTION THAT CHECKS FOR WHAT CHANNELS AVAILABLE FOR SENDING AND
-//TODO: A FUNCTION THAT CALLS THE ABOVE FUNCTION AND THE RELEVANT SENDCANMESSAGE FUNCTION
-//		(extended vs regular CAN) Done (tbc)
-
-//TODO: Create CanTxGatekeeperTask (so only one task can access the SPI-CAN peripheral at once)
-//		Test it by creating the freertos task handle
-
-//TODO: Test receiving interrupt and task (tbd)
-
-//TODO: Once a CanTxGatekeeperTask is added, a mutex will be needed to avoid race condition
-//		of the SPI peripheral between CANTxGatekeeper and CANRxInterruptTask
-
-//TODO: Comment the heck out of everything (tbc)
-
-//TODO: write a how to use README that includes creating CANRXInterruptTask,
-//		mutex and queue as well as adding CAN.C and CAN.h (tbd)
-
-// TODO: Check available channels, if not there add it to queue
-// if theres time ^
-
 /*-------------------------------SPI interface instructions-------------------------------*/
 
 /**
@@ -108,22 +88,27 @@ void ConfigureCANSPI(CANPeripheral *peripheral)
 	status = HAL_SPI_Transmit(peripheral->hspi, &resetCommand, 1, 100U);  //reset IC to default
 	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_SET);
 
-	CAN_IC_WRITE_REGISTER(0x0f, 0x80, peripheral); //Ensure IC is in configuration mode
+	osDelay(100);	// delay just to make sure ic is finished setting up
 
-	uint8_t CANSTAT_BUF = 0;
-	while (CANSTAT_BUF != 0x80) {
-		CAN_IC_READ_REGISTER(0x0E, &CANSTAT_BUF, peripheral);
+	//Ensure IC is in configuration mode
+	// CAN_IC_WRITE_REGISTER(CANCTRL, 0x80, peripheral);
+	CAN_IC_WRITE_REGISTER_BITWISE(CANCTRL, 0xE0, 0x80, peripheral);
+
+	// CANSTAT.OPMOD must read as config mode to be able to write to the registers
+	uint8_t CANSTAT_STATUS = 0;
+	while (CANSTAT_STATUS>>5 != 0x08) {
+		CAN_IC_READ_REGISTER(CANSTAT, &CANSTAT_STATUS, peripheral);
 	}
 
 	CAN_IC_WRITE_REGISTER(CNF1, CONFIG_CNF1, peripheral); //configure CNF1
 	CAN_IC_WRITE_REGISTER(CNF2, CONFIG_CNF2, peripheral); //configure CNF2
 	CAN_IC_WRITE_REGISTER(CNF3, CONFIG_CNF3, peripheral); //configure CNF3
 
-	CAN_IC_WRITE_REGISTER(CANINTE, 0xff, peripheral); 	//configure interrupts, currently enable error and and wakeup INT
+	CAN_IC_WRITE_REGISTER(CANINTE, 0xFC, peripheral); 	//configure interrupts, currently enable error and and wakeup INT
 	CAN_IC_WRITE_REGISTER(CANINTF, 0x00, peripheral); 	//clear INTE flags
 									   		//this should be a bit-wise clear in any other case to avoid unintentionally clearing flags
 
-	CAN_IC_WRITE_REGISTER(0x0c, 0x0f, peripheral); //set up RX0BF and RX1BF as interrupt pins
+	CAN_IC_WRITE_REGISTER(BFPCTRL, 0x0f, peripheral); //set up RX0BF and RX1BF as interrupt pins
 
 	CAN_IC_WRITE_REGISTER(RXB0CTRL, 0x60, peripheral); //accept any message on buffer 0
 	CAN_IC_WRITE_REGISTER(RXB1CTRL, 0x60, peripheral); //accept any message on buffer 1
@@ -132,11 +117,10 @@ void ConfigureCANSPI(CANPeripheral *peripheral)
 
 	#if CAN_TEST_SETUP
 	CAN_IC_WRITE_REGISTER(0x0F, 0x44, peripheral);	// Put IC in loop-back mode for testing as well as enable CLKOUT pin with 1:1 prescaler
-
-	while (CANSTAT_BUF != 0x40) {
-		CAN_IC_READ_REGISTER(0x0E, &CANSTAT_BUF, peripheral);
+	CANSTAT_STATUS = 0;
+	while (CANSTAT_STATUS != 0x40) {
+		CAN_IC_READ_REGISTER(0x0E, &CANSTAT_STATUS, peripheral);
 	}
-
 	#endif
 }
 
@@ -146,6 +130,7 @@ uint8_t checkAvailableTXChannel(CANPeripheral *peripheral)
 {
     uint32_t prevWakeTime = xTaskGetTickCount(); 	//Delay is fine if we have a CanTxGatekeeperTask
 
+	//  Check if TXBnCTRL.TXREQ is set, if not then buffer is available to use
     for ever
     {
         uint8_t TXB0Status;
@@ -153,29 +138,26 @@ uint8_t checkAvailableTXChannel(CANPeripheral *peripheral)
         uint8_t TXB2Status;
 
         CAN_IC_READ_REGISTER(TXB0CTRL, &TXB0Status, peripheral);
-        TXB0Status = TXB0Status >> 3; //Not masking out bits
 
+        TXB0Status = TXB0Status & 0x08; //Not masking out bits
         if (!TXB0Status) {
             return 0;
         }
 
         CAN_IC_READ_REGISTER(TXB1CTRL, &TXB1Status, peripheral);
-        TXB1Status = TXB1Status >> 3; //Not masking out bits
-
+        TXB1Status = TXB1Status & 0x08; //Not masking out bits
         if (!TXB1Status) {
             return 1;
         }
 
         CAN_IC_READ_REGISTER(TXB2CTRL, &TXB2Status, peripheral);
-        TXB2Status = TXB2Status >> 3; //Not masking out bits
-
+        TXB2Status = TXB2Status & 0x08; //Not masking out bits
         if (!TXB2Status) {
             return 2;
         }
 
         prevWakeTime += TX_CHANNEL_CHECK_DELAY;
         // osDelayUntil(prevWakeTime);
-
     }
 }
 
@@ -309,14 +291,3 @@ void receiveCANMessage(uint8_t channel, uint32_t* ID, uint8_t* DLC, uint8_t* dat
 	return;
 }
 
-CANINTERFACETASK(){
-
-#grab command from queue
-
-	SWITCH (command)
-					case send
-						Sendmessage()
-					case receive
-						receivemessage(pin)
-
-}
