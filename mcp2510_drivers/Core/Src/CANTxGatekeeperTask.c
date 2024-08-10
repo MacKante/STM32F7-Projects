@@ -18,6 +18,10 @@ void CANTxGatekeeperTask(void* arg) {
 
 void CANTxGatekeeper(CANMsg *msg) {
 	// Acquire message to send from queue
+	osStatus_t status = osMessageGet(CANTxMessageQueue, msg, NULL, osWaitForever);
+	if (status != osOK) {
+		// Handle if not ok
+	}
 
 	// Wait for mutex
 	if ( osMutexWait(SPIMutexHandle, 0) == osOK )

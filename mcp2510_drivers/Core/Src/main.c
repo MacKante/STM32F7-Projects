@@ -63,13 +63,7 @@ const osThreadAttr_t defaultTask_attributes = {
 };
 /* USER CODE BEGIN PV */
 
-// /* Definition for CANTxGateKeeperTask */
-// osMutexId_t CANTxGateKeeperTaskHandle;
-// const osThreadAttr_t CANTxGateKeeperTask_attributes = {
-//   .name = "CANTxGateKeeperTask",
-//   .priority = (osPriority) osPriorityNormal,
-//   .stack_size = DEFAULT_TASK_STACK_SIZE
-// };
+
 
 // osThreadId_t queueMessageTask1Handle;
 // const osThreadAttr_t queueMessageTask1_attributes = {
@@ -84,6 +78,14 @@ const osThreadAttr_t defaultTask_attributes = {
 //   .priority = (osPriority_t) osPriorityLow,
 //   .stack_size = DEFAULT_TASK_STACK_SIZE
 // };
+
+/* Definition for CANTxGateKeeperTask */
+osMutexId_t CANTxGateKeeperTaskHandle;
+const osThreadAttr_t CANTxGateKeeperTask_attributes = {
+  .name = "CANTxGateKeeperTask",
+  .priority = (osPriority) osPriorityNormal,
+  .stack_size = DEFAULT_TASK_STACK_SIZE
+};
 
 /* Definitions for CANRXInterruptTask */
 osThreadId_t CANRXInterruptTaskHandle;

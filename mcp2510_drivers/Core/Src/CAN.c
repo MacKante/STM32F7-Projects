@@ -133,6 +133,14 @@ uint8_t checkAvailableTXChannel(CANPeripheral *peripheral)
 	//  Check if TXBnCTRL.TXREQ is set, if not then buffer is available to use
     for ever
     {
+		/*
+		TODO: REMOVE THIS STUFF
+
+			When CANINTF.TXn is cleared, it indicates that "n" buffer is clear and can be used to put a message in...
+			Use flags instead as it will be easier and faster...
+
+		*/
+
         uint8_t TXB0Status;
         uint8_t TXB1Status;
         uint8_t TXB2Status;

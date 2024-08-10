@@ -2,6 +2,7 @@
     "files.associations": {
         "canregisters.h": "c",
         "cmsis_os.h": "c",
-        "can.h": "c"
+        "can.h": "c",
+        "cancommandtask.h": "c"
     }
 }

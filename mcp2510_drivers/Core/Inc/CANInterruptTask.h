@@ -12,13 +12,14 @@
 #include "cmsis_os2.h"
 
 extern osMessageQueueId_t CANCommandQueue;
+extern CANPeripheral peripheral1;
+extern CANPeripheral peripheral2;
 
-void CANInterruptTask(void* arg);
+extern osMutexId_t SPIMutexHandle;
+
+void CANReadInterruptTask(void* arg);
 void CANReadInterrupt();
 
 typedef struct {
 	CAN_COMMAND command;
 } CAN_COMMAND_MSG;
-
-extern CANPeripheral peripheral1;
-extern CANPeripheral peripheral2;

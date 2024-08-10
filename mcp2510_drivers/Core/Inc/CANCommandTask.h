@@ -11,6 +11,13 @@
 #include "cmsis_os.h"
 #include "cmsis_os2.h"
 
+extern osMutexId_t SPIMutexHandle;
+extern osMessageQueueId_t CANRxMessageQueue;
+
+extern CANPeripheral peripheral1;
+extern ReceiveMsg RX0Buffer;
+extern ReceiveMsg RX1Buffer;
+
 typedef enum {
     RX0IF,  // Receive Buffer 0 Full
     RX1IF,  // Receive Buffer 1 Full 
@@ -20,19 +27,11 @@ typedef enum {
     ERRIF,  // Error Interrupt Flag (check EFLG register)
     WAKIF,  // Wakeup Interrupt Flag (*** prolly dont need this)
     MERRF   // Message Error Interrupt
-} CAN_COMMAND;
+} CAN_INTERRUPT;
 
-void CANCommandTask(void* arg);
-void RUN_CAN_COMMAND(CAN_COMMAND command);
+void CANInterruptTask(void* arg);
+void CAN_CLEAR_INTERRUPT(CANPeripheral* peripheral);
 
 typedef struct {
 	CAN_COMMAND command;
 } CAN_COMMAND_Msg;
-
-extern osMutexId_t SPIMutexHandle;
-extern osMessageQueueId_t CANRxMessageQueue;
-
-extern CANPeripheral peripheral1;
-extern ReceiveMsg RX0Buffer;
-extern ReceiveMsg RX1Buffer;
-

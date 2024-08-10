@@ -8,15 +8,19 @@
 #include "CAN.h"
 #include "CANCommandTask.h"
 
-void CANCommandTask(void* arg) {
+void CANInterruptTask(void* arg) {
 	for(;;) {
-		uint8_t command;
-		osStatus_t status = osMessageQueueGet(CANCommandQueue, &command, NULL, osWaitForever);
-		RUN_CAN_COMMAND(command, &peripheral1);
+		CAN_CLEAR_INTERRUPT(command, &peripheral1);
 	}
 }
 
-void RUN_CAN_COMMAND(CAN_COMMAND command, CANPeripheral* peripheral) {
+void CAN_CLEAR_INTERRUPT(CANPeripheral* peripheral) {
+
+    /* Receive interrupt to clear from queue */
+    CAN_INTERRUPT canInterruptType;
+    osStatus_t status = osMessageQueueGet(CANCommandQueue, &canInterruptType, NULL, osWaitForever);
+    
+    /* Handle interrupt */
     if( osMutexWait(SPIMutexHandle, 0) == osOK ) {
         switch(command) {
             case RX0IF:
