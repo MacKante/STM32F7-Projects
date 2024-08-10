@@ -14,3 +14,11 @@
 extern osMessageQueueId_t CANCommandQueue;
 
 void CANInterruptTask(void* arg);
+void CANReadInterrupt();
+
+typedef struct {
+	CAN_COMMAND command;
+} CAN_COMMAND_MSG;
+
+extern CANPeripheral peripheral1;
+extern CANPeripheral peripheral2;

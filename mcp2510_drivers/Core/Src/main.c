@@ -26,6 +26,7 @@
 #include "CANRxInterruptTask.h"
 #include "CANTxGatekeeperTask.h"
 #include "queueMessageTask.h"
+#include "CANCommandTask.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -61,12 +62,28 @@ const osThreadAttr_t defaultTask_attributes = {
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* USER CODE BEGIN PV */
-osMutexId_t CANTxGateKeeperTaskHandle;
-const osThreadAttr_t CANTxGateKeeperTask_attributes = {
-  .name = "CANTxGateKeeperTask",
-  .priority = (osPriority) osPriorityNormal,
-  .stack_size = DEFAULT_TASK_STACK_SIZE
-};
+
+// /* Definition for CANTxGateKeeperTask */
+// osMutexId_t CANTxGateKeeperTaskHandle;
+// const osThreadAttr_t CANTxGateKeeperTask_attributes = {
+//   .name = "CANTxGateKeeperTask",
+//   .priority = (osPriority) osPriorityNormal,
+//   .stack_size = DEFAULT_TASK_STACK_SIZE
+// };
+
+// osThreadId_t queueMessageTask1Handle;
+// const osThreadAttr_t queueMessageTask1_attributes = {
+//   .name = "queueMessageTask1",
+//   .priority = (osPriority_t) osPriorityLow,
+//   .stack_size = DEFAULT_TASK_STACK_SIZE
+// };
+
+// osThreadId_t queueMessageTask2Handle;
+// const osThreadAttr_t queueMessageTask2_attributes = {
+//   .name = "queueMessageTask2",
+//   .priority = (osPriority_t) osPriorityLow,
+//   .stack_size = DEFAULT_TASK_STACK_SIZE
+// };
 
 /* Definitions for CANRXInterruptTask */
 osThreadId_t CANRXInterruptTaskHandle;
@@ -76,17 +93,11 @@ const osThreadAttr_t CANRXInterruptTask_attributes = {
   .stack_size = DEFAULT_TASK_STACK_SIZE
 };
 
-osThreadId_t queueMessageTask1Handle;
-const osThreadAttr_t queueMessageTask1_attributes = {
-  .name = "queueMessageTask1",
-  .priority = (osPriority_t) osPriorityLow,
-  .stack_size = DEFAULT_TASK_STACK_SIZE
-};
-
-osThreadId_t queueMessageTask2Handle;
-const osThreadAttr_t queueMessageTask2_attributes = {
-  .name = "queueMessageTask2",
-  .priority = (osPriority_t) osPriorityLow,
+/* Definition for CANCommandTask */
+osThreadId_t CANCommandTaskHandle;
+const osThreadAttr_t CANCommandTask_attributes = {
+  .name = "CANCommandTask",
+  .priority = (osPriority_t) osPriorityNormal,
   .stack_size = DEFAULT_TASK_STACK_SIZE
 };
 
@@ -97,8 +108,8 @@ const osMutexAttr_t SPIMutex_attributes = {
 };
 
 /* Queue Definitions*/
-osMessageQueueId_t CANRxMessageQueue;
 osMessageQueueId_t CANTxMessageQueue;
+osMessageQueueId_t CANRxMessageQueue;
 osMessageQueueId_t CANCommandQueue;
 
 /* CAN Peripherals - Temporary */
@@ -114,11 +125,9 @@ CANPeripheral peripheral2 = {
   .hspi = &hspi4
 };
 
+/* More Temporary Buffers, flags, etc */
 ReceiveMsg RX0Buffer;
 ReceiveMsg RX1Buffer;
-
-uint8_t RXPin;
-uint8_t CANINTFlag = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -217,7 +226,7 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
-  CANCommandQueue = osMessageQueueNew(15, sizeof(uint8_t), NULL);
+  CANCommandQueue = osMessageQueueNew(15, sizeof(CAN_COMMAND_MSG), NULL);
   CANTxMessageQueue = osMessageQueueNew(10, sizeof(CANMsg), NULL);
   CANRxMessageQueue = osMessageQueueNew(3, sizeof(uint8_t), NULL);
   /* USER CODE END RTOS_QUEUES */
@@ -225,6 +234,9 @@ int main(void)
   /* Create the thread(s) */
   /* creation of defaultTask */
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+
+  /* Creation of CANCommandTask */
+  CANCommandTaskHandle = osThreadNew(CANCommandTask, NULL, &CANCommandTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -243,40 +255,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
-//	  CANINTFlag = 1;
-//
-//	  uint8_t buf1;
-//	  uint8_t buf2;
-//	  CAN_IC_READ_REGISTER(0xFE, &buf1, &peripheral1);
-//	  CAN_IC_READ_REGISTER(0xFE, &buf2, &peripheral2);
-//
-//	  uint8_t channel = sendExtendedCANMessage(&msg1, &peripheral1);
-//
-//	  // read CANINTE, CANINTE.TXNIE must be set
-//	  CAN_IC_READ_REGISTER(CANINTE, &buf1, &peripheral1);
-//
-//	  uint8_t TXBCTRLStatus;
-//	  CAN_IC_READ_REGISTER((TXB0CTRL + 16*(channel)), &buf2, &peripheral1);
-//
-//	  uint8_t CANINTFStatus;
-//	  CAN_IC_READ_REGISTER(CANINTF, &CANINTFStatus, &peripheral1);
-//
-//	  uint8_t EFLGStatus;
-//	  CAN_IC_READ_REGISTER(EFLG, &CANINTFStatus, &peripheral1);
-//
-//	  uint32_t ID = 0;
-//	  uint8_t DLC = 0;
-//	  uint8_t data[8] = {0};
-//
-//	  receiveCANMessage(RXPin, &ID, &DLC, data, &peripheral1);
-//	  CAN_IC_READ_REGISTER(0x0E, &buf1, &peripheral1);
-//
-//	  RXPin = 2;
-//
-//	  CAN_IC_READ_REGISTER(0x0E, &buf2, &peripheral2);
     /* USER CODE END WHILE */
-
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -638,7 +617,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	switch (GPIO_Pin) {
 		case CAN_INT_Pin:
 				// read the CANINTF register
+
+
 		case CAN_RX0BF_Pin:
+      osMessageQueuePut();
+
 
 		case CAN_RX1BF_Pin:
 

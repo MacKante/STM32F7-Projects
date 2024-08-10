@@ -18,16 +18,17 @@ void CANRxInterruptTask(void* arg)
 
 void CANRxInterrupt()
 {
-	uint8_t channel;
+	CAN_RX_Channel channel;
 	osStatus_t status = osMessageQueueGet(CANRxMessageQueue, &channel, 0, osWaitForever);
 
+	// add a switch case on where to send this
 	uint32_t ID = 0;
 	uint8_t DLC = 0;
 	uint8_t data[8] = {0};
 
 	if (osMutexWait(SPIMutexHandle, 0) == osOK)
 	{
-		receiveCANMessage(channel, &ID, &DLC, data, &peripheral);
+		receiveCANMessage(channel.pin, &ID, &DLC, data, &peripheral);
 		osMutexRelease(SPIMutexHandle);
 	}
 

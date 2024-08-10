@@ -14,8 +14,16 @@
 void CANRxInterruptTask(void* arg);
 void CANRxInterrupt();
 
+typedef struct {
+	uint8_t pin;
+} CAN_RX_Channel;
+
 extern SPI_HandleTypeDef hspi1;
 extern osMutexId_t SPIMutexHandle;
 extern osMessageQueueId_t CANRxMessageQueue;
 
-extern CANPeripheral peripheral;
+extern CANPeripheral peripheral1;
+extern CANPeripheral peripheral2;
+
+extern ReceiveMsg RX0Buffer;
+extern ReceiveMsg RX1Buffer;
