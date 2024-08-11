@@ -23,10 +23,12 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "CAN.h"
-#include "CANRxInterruptTask.h"
 #include "CANTxGatekeeperTask.h"
+#include "CANRxMessageTask.h"
+#include "CANClearInterruptTask.h"
+#include "CANReadInterruptTask.h"
+
 #include "queueMessageTask.h"
-#include "CANCommandTask.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -36,7 +38,9 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define CAN_INTERRUPT_QUEUE_COUNT 5 // anticipate 2 sudden messages + 1 for extra room
+#define CAN_INTERRUPT_QUEUE_COUNT 12 // anticipate 2 sudden messages + 1 for extra room
+#define CAN_TRANSMIT_QUEUE_COUNT 10
+#define CAN_RECEIVE_QUEUE_COUNT 5
 #define DEFAULT_TASK_STACK_SIZE 128 * 10
 /* USER CODE END PD */
 
@@ -63,8 +67,6 @@ const osThreadAttr_t defaultTask_attributes = {
 };
 /* USER CODE BEGIN PV */
 
-
-
 // osThreadId_t queueMessageTask1Handle;
 // const osThreadAttr_t queueMessageTask1_attributes = {
 //   .name = "queueMessageTask1",
@@ -83,22 +85,30 @@ const osThreadAttr_t defaultTask_attributes = {
 osMutexId_t CANTxGateKeeperTaskHandle;
 const osThreadAttr_t CANTxGateKeeperTask_attributes = {
   .name = "CANTxGateKeeperTask",
-  .priority = (osPriority) osPriorityNormal,
+  .priority = (osPriority) osPriorityBelowNormal,
   .stack_size = DEFAULT_TASK_STACK_SIZE
 };
 
 /* Definitions for CANRXInterruptTask */
-osThreadId_t CANRXInterruptTaskHandle;
-const osThreadAttr_t CANRXInterruptTask_attributes = {
-  .name = "CANRXInterruptTask",
+osThreadId_t CANRxMessageTaskHandle;
+const osThreadAttr_t CANRxMessageTask_attributes = {
+  .name = "CANRxMessageTask",
   .priority = (osPriority_t) osPriorityBelowNormal,
   .stack_size = DEFAULT_TASK_STACK_SIZE
 };
 
-/* Definition for CANCommandTask */
-osThreadId_t CANCommandTaskHandle;
-const osThreadAttr_t CANCommandTask_attributes = {
-  .name = "CANCommandTask",
+/* Definition for CANReadInterruptTask */
+osThreadId_t CANReadInterruptTaskHandle;
+const osThreadAttr_t CANReadInterruptTask_attributes = {
+  .name = " CANReadInterruptTask",
+  .priority = (osPriority_t) osPriorityAboveNormal,
+  .stack_size = DEFAULT_TASK_STACK_SIZE
+};
+
+/* Definition for CANClearInterruptTask */
+osThreadId_t CANClearInterruptTaskHandle;
+const osThreadAttr_t CANClearInterruptTask_attributes = {
+  .name = " CANClearInterruptTask",
   .priority = (osPriority_t) osPriorityNormal,
   .stack_size = DEFAULT_TASK_STACK_SIZE
 };
@@ -112,7 +122,7 @@ const osMutexAttr_t SPIMutex_attributes = {
 /* Queue Definitions*/
 osMessageQueueId_t CANTxMessageQueue;
 osMessageQueueId_t CANRxMessageQueue;
-osMessageQueueId_t CANCommandQueue;
+osMessageQueueId_t CANInterruptQueue;
 
 /* CAN Peripherals - Temporary */
 CANPeripheral peripheral1 = {
@@ -128,8 +138,19 @@ CANPeripheral peripheral2 = {
 };
 
 /* More Temporary Buffers, flags, etc */
+
+/* CANReadInterruptFlag - Read the CANINTF register */
+uint8_t CANReadInterruptFlag = 0;
+
+/* RXnBuffers - Buffers for each of the Rx channels to dump */
 ReceiveMsg RX0Buffer;
 ReceiveMsg RX1Buffer;
+
+/* TXBnStatus Flags - Used to know which Tx Buffers are free */
+uint8_t TXB0StatusFlag = 1;
+uint8_t TXB1StatusFlag = 1;
+uint8_t TXB2StatusFlag = 1;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -185,18 +206,20 @@ int main(void)
   MX_SPI4_Init();
   /* USER CODE BEGIN 2 */
 
+  // Prolly dont need this
   // Disable CAN Interrupt pins cuz the IC goes crazy on setup
-//  HAL_NVIC_DisableIRQ(IRQn);
-//  HAL_NVIC_DisableIRQ(IRQn);
-//  HAL_NVIC_DisableIRQ(IRQn);
+  //  HAL_NVIC_DisableIRQ(IRQn);
+  //  HAL_NVIC_DisableIRQ(IRQn);
+  //  HAL_NVIC_DisableIRQ(IRQn);
 
   ConfigureCANSPI(&peripheral1);
   ConfigureCANSPI(&peripheral2);
 
+  // Prolly dont need this
   // Re-enable CAN Interrupt pins when ready for normal operation
-//  HAL_NVIC_EnableIRQ(IRQn);
-//  HAL_NVIC_EnableIRQ(IRQn);
-//  HAL_NVIC_EnableIRQ(IRQn);
+  //  HAL_NVIC_EnableIRQ(IRQn);
+  //  HAL_NVIC_EnableIRQ(IRQn);
+  //  HAL_NVIC_EnableIRQ(IRQn);
 
   CANMsg msg1 = {
   			.DLC = 1,
@@ -228,18 +251,26 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
-  CANCommandQueue = osMessageQueueNew(15, sizeof(CAN_COMMAND_MSG), NULL);
-  CANTxMessageQueue = osMessageQueueNew(10, sizeof(CANMsg), NULL);
-  CANRxMessageQueue = osMessageQueueNew(3, sizeof(uint8_t), NULL);
+  CANInterruptQueue = osMessageQueueNew(CAN_INTERRUPT_QUEUE_COUNT, sizeof(CAN_INTERRUPT), NULL);
+  CANTxMessageQueue = osMessageQueueNew(CAN_TRANSMIT_QUEUE_COUNT, sizeof(CANMsg), NULL);
+  CANRxMessageQueue = osMessageQueueNew(CAN_RECEIVE_QUEUE_COUNT, sizeof(uint8_t), NULL);
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
   /* creation of defaultTask */
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
-  /* Creation of CANCommandTask */
-  CANCommandTaskHandle = osThreadNew(CANCommandTask, NULL, &CANCommandTask_attributes);
+  /* Creation of CANClearTask */
+  CANClearInterruptTaskHandle = osThreadNew(CANClearInterruptTask, NULL, &CANClearInterruptTask_attributes);
 
+  /* Creation of CANReadInterruptTask */
+  CANReadInterruptTaskHandle = osThreadNew(CANReadInterruptTask, NULL, &CANRxInterruptTask_attributes);
+
+  /* Creation of CANRxMessageTask */
+  CANRxMessageTaskHandle = osThreadNew(CANRxMessageTask, NULL, &CANRxMessageTask_attributes);
+
+  /* Creation of CANTxGatekeeperTask */
+  CANTxGateKeeperTaskHandle = osThreadNew(CANTxGatekeeperTask, NULL, &CANTxGateKeeperTask_attributes);
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -618,15 +649,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	switch (GPIO_Pin) {
 		case CAN_INT_Pin:
-				// read the CANINTF register
-
-
+			// read the CANINTF register
+			CANReadInterruptFlag = 1;
 		case CAN_RX0BF_Pin:
-      osMessageQueuePut();
-
-
+			osMessageQueuePut(mq_id, msg_ptr, msg_prio, timeout);
 		case CAN_RX1BF_Pin:
-
+			osMessageQueuePut(mq_id, msg_ptr, msg_prio, timeout);
+		case CAN2_INT_Pin:
+			// read the CANITNF register
 	}
 }
 

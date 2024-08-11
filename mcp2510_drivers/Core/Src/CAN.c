@@ -69,6 +69,25 @@ void CAN_IC_WRITE_REGISTER_BITWISE(uint8_t address, uint8_t mask, uint8_t value,
 }
 
 /**
+ * @brief read status of CAN IC
+ * @param buffer: buffer to write status
+ * @retval None
+ */
+void CAN_IC_READ_STATUS(uint8_t* buffer, CANPeripheral *peripheral)
+{
+	// Packet includes read status instruction
+	uint8_t packet[1] = {0xA0};
+
+	HAL_StatusTypeDef status;
+
+	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_RESET); // Initialize instruction by setting CS pin low
+	status = HAL_SPI_Transmit(peripheral->hspi, packet, 1, 100U); //transmit
+	status = HAL_SPI_Receive(peripheral->hspi, buffer, 1, 100U); //receive register contents
+	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_SET); // Terminate instruction by setting CS pin high
+}
+
+
+/**
   * @brief configure CAN IC through SPI
   * @param None
   * @retval None
@@ -77,6 +96,10 @@ void CAN_IC_WRITE_REGISTER_BITWISE(uint8_t address, uint8_t mask, uint8_t value,
   */
 void ConfigureCANSPI(CANPeripheral *peripheral)
 {
+
+	// TODO: ENSURE THAT THE IC IS IN CONFIG MODE...............
+	// Wait for until it is before proceeding
+	
 	uint8_t resetCommand = 0xc0; //instruction to reset IC to default
 	uint8_t CONFIG_CNF1 = 0x00; //BRP = 0 to make tq = 250ns and a SJW of 1Tq
 	uint8_t CONFIG_CNF2 = 0xd8; //PRSEG = 0, PHSEG1 = 3, SAM = 0, BTLMODE = 1
@@ -90,14 +113,14 @@ void ConfigureCANSPI(CANPeripheral *peripheral)
 
 	osDelay(100);	// delay just to make sure ic is finished setting up
 
-	//Ensure IC is in configuration mode
-	// CAN_IC_WRITE_REGISTER(CANCTRL, 0x80, peripheral);
+	// Ensure IC is in configuration mode
 	CAN_IC_WRITE_REGISTER_BITWISE(CANCTRL, 0xE0, 0x80, peripheral);
 
 	// CANSTAT.OPMOD must read as config mode to be able to write to the registers
 	uint8_t CANSTAT_STATUS = 0;
-	while (CANSTAT_STATUS>>5 != 0x08) {
+	while (CANSTAT_STATUS != 0x80) {
 		CAN_IC_READ_REGISTER(CANSTAT, &CANSTAT_STATUS, peripheral);
+		osDelay(100);
 	}
 
 	CAN_IC_WRITE_REGISTER(CNF1, CONFIG_CNF1, peripheral); //configure CNF1
@@ -113,13 +136,19 @@ void ConfigureCANSPI(CANPeripheral *peripheral)
 	CAN_IC_WRITE_REGISTER(RXB0CTRL, 0x60, peripheral); //accept any message on buffer 0
 	CAN_IC_WRITE_REGISTER(RXB1CTRL, 0x60, peripheral); //accept any message on buffer 1
 
-	// CAN_IC_WRITE_REGISTER(0x0f, 0x04, peripheral); //Put IC in normal operation mode with CLKOUT pin enable and 1:1 prescaler
+	CAN_IC_WRITE_REGISTER(CANCTRL, 0x04, peripheral); //Put IC in normal operation mode with CLKOUT pin enable and 1:1 prescaler
+
+	CANSTAT_STATUS = 0;
+
+//	CAN_IC_WRITE_REGISTER_BITWISE(CANCTRL, 0xE7, 0x04, peripheral); //Put IC in normal operation mode with CLKOUT pin enable and 1:1 prescaler
+//	while (CANSTAT_STATUS != 0x40) {
+//		CAN_IC_READ_REGISTER(CANSTAT, &CANSTAT_STATUS, peripheral);
+//	}
 
 	#if CAN_TEST_SETUP
-	CAN_IC_WRITE_REGISTER(0x0F, 0x44, peripheral);	// Put IC in loop-back mode for testing as well as enable CLKOUT pin with 1:1 prescaler
-	CANSTAT_STATUS = 0;
-	while (CANSTAT_STATUS != 0x40) {
-		CAN_IC_READ_REGISTER(0x0E, &CANSTAT_STATUS, peripheral);
+	CAN_IC_WRITE_REGISTER_BITWISE(CANCTRL, 0xE7, 0x44, peripheral);	// Put IC in loop-back mode for testing as well as enable CLKOUT pin with 1:1 prescaler
+	while (CANSTAT_STATUS != 0x44) {
+		CAN_IC_READ_REGISTER(CANSTAT, &CANSTAT_STATUS, peripheral);
 	}
 	#endif
 }
@@ -135,31 +164,31 @@ uint8_t checkAvailableTXChannel(CANPeripheral *peripheral)
     {
 		/*
 		TODO: REMOVE THIS STUFF
-
 			When CANINTF.TXn is cleared, it indicates that "n" buffer is clear and can be used to put a message in...
 			Use flags instead as it will be easier and faster...
-
 		*/
 
-        uint8_t TXB0Status;
-        uint8_t TXB1Status;
-        uint8_t TXB2Status;
+    	uint8_t CANStatus;
+    	CAN_IC_READ_STATUS(&CANStatus, peripheral);
 
-        CAN_IC_READ_REGISTER(TXB0CTRL, &TXB0Status, peripheral);
+        uint8_t TXB0Status = CANStatus & 0b00000100;
+        uint8_t TXB1Status = CANStatus & 0b00010000;
+        uint8_t TXB2Status = CANStatus & 0b01000000;
 
-        TXB0Status = TXB0Status & 0x08; //Not masking out bits
+        // CAN_IC_READ_REGISTER(TXB0CTRL, &TXB0Status, peripheral);
+        // TXB0Status = TXB0Status & 0x08; //Not masking out bits
         if (!TXB0Status) {
             return 0;
         }
 
-        CAN_IC_READ_REGISTER(TXB1CTRL, &TXB1Status, peripheral);
-        TXB1Status = TXB1Status & 0x08; //Not masking out bits
+        // CAN_IC_READ_REGISTER(TXB1CTRL, &TXB1Status, peripheral);
+        // TXB1Status = TXB1Status & 0x08; //Not masking out bits
         if (!TXB1Status) {
             return 1;
         }
 
-        CAN_IC_READ_REGISTER(TXB2CTRL, &TXB2Status, peripheral);
-        TXB2Status = TXB2Status & 0x08; //Not masking out bits
+        // CAN_IC_READ_REGISTER(TXB2CTRL, &TXB2Status, peripheral);
+        // TXB2Status = TXB2Status & 0x08; //Not masking out bits
         if (!TXB2Status) {
             return 2;
         }

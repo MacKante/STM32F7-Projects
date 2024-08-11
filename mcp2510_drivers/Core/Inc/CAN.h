@@ -32,6 +32,7 @@ typedef struct {
 void CAN_IC_READ_REGISTER(uint8_t address, uint8_t* buffer, CANPeripheral *peripheral);
 void CAN_IC_WRITE_REGISTER_BITWISE(uint8_t address, uint8_t mask, uint8_t value, CANPeripheral *peripheral);
 void CAN_IC_WRITE_REGISTER(uint8_t address, uint8_t value, CANPeripheral *peripheral);
+void CAN_IC_READ_STATUS(uint8_t* buffer, CANPeripheral *peripheral);
 void ConfigureCANSPI(CANPeripheral *peripheral);
 uint8_t sendCANMessage(CANMsg *msg, CANPeripheral *peripheral);
 uint8_t sendExtendedCANMessage(CANMsg *msg, CANPeripheral *peripheral);
