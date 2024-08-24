@@ -3,6 +3,12 @@
         "canregisters.h": "c",
         "cmsis_os.h": "c",
         "can.h": "c",
-        "cancommandtask.h": "c"
+        "cancommandtask.h": "c",
+        "canreadinterrupttask.h": "c",
+        "stm32f7xx.h": "c",
+        "canclearinterrupttask.h": "c",
+        "canrxmessagetask.h": "c",
+        "stdint.h": "c",
+        "main.h": "c"
     }
 }

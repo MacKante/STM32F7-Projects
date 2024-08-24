@@ -45,8 +45,10 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- ../Core/Inc/CAN.h ../Core/Inc/main.h ../Core/Inc/CANRegisters.h \
- ../Core/Inc/CANRxInterruptTask.h ../Core/Inc/CANTxGatekeeperTask.h \
+ ../Core/Inc/CAN.h ../Core/Inc/main.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
+ ../Core/Inc/CANRegisters.h ../Core/Inc/CANTxGatekeeperTask.h \
+ ../Core/Inc/CANRxMessageTask.h ../Core/Inc/CANClearInterruptTask.h \
  ../Core/Inc/queueMessageTask.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h:
@@ -97,7 +99,9 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 ../Core/Inc/CAN.h:
 ../Core/Inc/main.h:
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 ../Core/Inc/CANRegisters.h:
-../Core/Inc/CANRxInterruptTask.h:
 ../Core/Inc/CANTxGatekeeperTask.h:
+../Core/Inc/CANRxMessageTask.h:
+../Core/Inc/CANClearInterruptTask.h:
 ../Core/Inc/queueMessageTask.h:

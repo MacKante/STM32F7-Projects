@@ -16,8 +16,7 @@ void CAN_IC_READ_REGISTER(uint8_t address, uint8_t* buffer, CANPeripheral *perip
 	// Packet includes 3 bytes
 	// 1st byte: 0x03 (specifies as read instruction)
 	// 2nd byte: address of register to read
-	// 3rd byte: dont care byte
-	uint8_t packet[3] = {0x03, address, 0x00};
+	uint8_t packet[2] = {0x03, address};
 
 	HAL_StatusTypeDef status;
 
@@ -86,6 +85,42 @@ void CAN_IC_READ_STATUS(uint8_t* buffer, CANPeripheral *peripheral)
 	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_SET); // Terminate instruction by setting CS pin high
 }
 
+/**
+ * @brief Reset the CAN IC
+ * @param None
+ * @retval None
+ */
+void CAN_IC_RESET(CANPeripheral *peripheral) {
+	// Packet includes reset instruction
+	uint8_t packet[1] = {0xC0};
+
+	HAL_StatusTypeDef status;
+
+	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_RESET);
+	status = HAL_SPI_Transmit(peripheral->hspi, packet, 1, 100U);  //reset IC to default
+	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_SET);
+
+	osDelay(100);
+}
+
+/**
+ * @brief Request to send transmit buffer
+ * @param channel: which buffer to send
+ * @retval None
+ */
+void CAN_IC_REQUEST_TO_SEND(uint8_t channel, CANPeripheral *peripheral) {
+	// T0: 0x01
+	// T1: 0x02
+	// T2: 0x04
+	uint8_t packet = (1 << channel);
+
+	HAL_StatusTypeDef status;
+
+	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_RESET);
+	status = HAL_SPI_Transmit(peripheral->hspi, &packet, 1, 100U);  //reset IC to default
+	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_SET);
+}
+
 
 /**
   * @brief configure CAN IC through SPI
@@ -95,62 +130,61 @@ void CAN_IC_READ_STATUS(uint8_t* buffer, CANPeripheral *peripheral)
   * TODO: add configuration verification and return value accordingly
   */
 void ConfigureCANSPI(CANPeripheral *peripheral)
-{
-
+{	
 	// TODO: ENSURE THAT THE IC IS IN CONFIG MODE...............
-	// Wait for until it is before proceeding
-	
-	uint8_t resetCommand = 0xc0; //instruction to reset IC to default
-	uint8_t CONFIG_CNF1 = 0x00; //BRP = 0 to make tq = 250ns and a SJW of 1Tq
-	uint8_t CONFIG_CNF2 = 0xd8; //PRSEG = 0, PHSEG1 = 3, SAM = 0, BTLMODE = 1
+
+	// oof this is a mind fook
+	// TODO: ask violet of this settings
+
+	// Ensure IC is out of reset state (128 clock cycles)
+	osDelay(100);
+
+	// Tq = (2 x (BRP + 1)) / Fosc
+	uint8_t CONFIG_CNF1 = 0x01; //BRP = 1 to make tq = 250ns and a SJW of 1Tq
+	uint8_t CONFIG_CNF2 = 0x98; //PRSEG = 0, PHSEG1 = 3, SAM = 0, BTLMODE = 1
 	uint8_t CONFIG_CNF3 = 0x01; //WAFKIL disabled, PHSEG2 = 2 (BTL enabled) but PHSEG = 1 makes it backwards compatible???? wat
 
 	HAL_StatusTypeDef status;
 
-	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_RESET);
-	status = HAL_SPI_Transmit(peripheral->hspi, &resetCommand, 1, 100U);  //reset IC to default
-	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_SET);
+	// Reset CAN IC
+	CAN_IC_RESET(peripheral);
 
-	osDelay(100);	// delay just to make sure ic is finished setting up
+	// CANSTAT.OPMOD must read as config mode to be able to write to the registers (0x80)
+	uint8_t CANSTAT_STATUS = 0;
+	CAN_IC_READ_REGISTER(CANSTAT, &CANSTAT_STATUS, peripheral);
 
 	// Ensure IC is in configuration mode
-	CAN_IC_WRITE_REGISTER_BITWISE(CANCTRL, 0xE0, 0x80, peripheral);
-
-	// CANSTAT.OPMOD must read as config mode to be able to write to the registers
-	uint8_t CANSTAT_STATUS = 0;
-	while (CANSTAT_STATUS != 0x80) {
-		CAN_IC_READ_REGISTER(CANSTAT, &CANSTAT_STATUS, peripheral);
+	if ((CANSTAT_STATUS & 0xE0) != 0x80) {
+		CAN_IC_WRITE_REGISTER_BITWISE(CANCTRL, 0xE0, 0x80, peripheral);
 		osDelay(100);
 	}
 
+	// Base IC Configuration Registers
 	CAN_IC_WRITE_REGISTER(CNF1, CONFIG_CNF1, peripheral); //configure CNF1
 	CAN_IC_WRITE_REGISTER(CNF2, CONFIG_CNF2, peripheral); //configure CNF2
 	CAN_IC_WRITE_REGISTER(CNF3, CONFIG_CNF3, peripheral); //configure CNF3
 
-	CAN_IC_WRITE_REGISTER(CANINTE, 0xFC, peripheral); 	//configure interrupts, currently enable error and and wakeup INT
-	CAN_IC_WRITE_REGISTER(CANINTF, 0x00, peripheral); 	//clear INTE flags
-									   		//this should be a bit-wise clear in any other case to avoid unintentionally clearing flags
-
-	CAN_IC_WRITE_REGISTER(BFPCTRL, 0x0f, peripheral); //set up RX0BF and RX1BF as interrupt pins
-
-	CAN_IC_WRITE_REGISTER(RXB0CTRL, 0x60, peripheral); //accept any message on buffer 0
-	CAN_IC_WRITE_REGISTER(RXB1CTRL, 0x60, peripheral); //accept any message on buffer 1
-
-	CAN_IC_WRITE_REGISTER(CANCTRL, 0x04, peripheral); //Put IC in normal operation mode with CLKOUT pin enable and 1:1 prescaler
+	// Receive Buffer Configurations
+	CAN_IC_WRITE_REGISTER_BITWISE(BFPCTRL, 0x0F, 0x0F, peripheral);
+	CAN_IC_WRITE_REGISTER_BITWISE(RXB0CTRL, 0x60, 0x60, peripheral);
+	CAN_IC_WRITE_REGISTER_BITWISE(RXB1CTRL, 0x60, 0x60, peripheral);
 
 	CANSTAT_STATUS = 0;
 
-//	CAN_IC_WRITE_REGISTER_BITWISE(CANCTRL, 0xE7, 0x04, peripheral); //Put IC in normal operation mode with CLKOUT pin enable and 1:1 prescaler
-//	while (CANSTAT_STATUS != 0x40) {
-//		CAN_IC_READ_REGISTER(CANSTAT, &CANSTAT_STATUS, peripheral);
-//	}
-
+	// Toggle CAN_TEST_SETUP to 1 for loopback mode, 0 for normal mode
 	#if CAN_TEST_SETUP
-	CAN_IC_WRITE_REGISTER_BITWISE(CANCTRL, 0xE7, 0x44, peripheral);	// Put IC in loop-back mode for testing as well as enable CLKOUT pin with 1:1 prescaler
-	while (CANSTAT_STATUS != 0x44) {
+		CAN_IC_WRITE_REGISTER_BITWISE(CANCTRL, 0xE7, 0x44, peripheral);	// Put IC in loop-back mode for testing as well as enable CLKOUT pin with 1:1 prescaler
+		osDelay(100);
+		CAN_IC_READ_REGISTER(CANSTAT, &CANSTAT_STATUS, peripheral); // 0x44
+	#else
+		CAN_IC_WRITE_REGISTER_BITWISE(CANCTRL, 0xE7, 0x04, peripheral); //Put IC in normal operation mode with CLKOUT pin enable and 1:1 prescaler
+		osDelay(100);
 		CAN_IC_READ_REGISTER(CANSTAT, &CANSTAT_STATUS, peripheral);
-	}
 	#endif
+
+	// Reset and configure interrupts
+	CAN_IC_WRITE_REGISTER(CANINTE, 0x20, peripheral); 	//configure interrupts, currently enable ERRIF
+	CAN_IC_WRITE_REGISTER(CANINTF, 0x00, peripheral); 	//clear INTE flags
 }
 
 /*-------------------------------------------------------------------------------------------*/
@@ -168,6 +202,7 @@ uint8_t checkAvailableTXChannel(CANPeripheral *peripheral)
 			Use flags instead as it will be easier and faster...
 		*/
 
+		// Use "Read Status" command from IC to retrieve status of TXBnCTRL.TXREQ bits (remember to use mask, check datasheet for byte structure)
     	uint8_t CANStatus;
     	CAN_IC_READ_STATUS(&CANStatus, peripheral);
 
@@ -193,7 +228,7 @@ uint8_t checkAvailableTXChannel(CANPeripheral *peripheral)
             return 2;
         }
 
-        prevWakeTime += TX_CHANNEL_CHECK_DELAY;
+        // prevWakeTime += TX_CHANNEL_CHECK_DELAY;
         // osDelayUntil(prevWakeTime);
     }
 }
@@ -206,14 +241,12 @@ uint8_t checkAvailableTXChannel(CANPeripheral *peripheral)
   */
 uint8_t sendCANMessage(CANMsg *msg, CANPeripheral *peripheral)
 {
+	// Find TxBuffer to use
 	uint8_t channel = checkAvailableTXChannel(peripheral);
     uint8_t initialBufferAddress = TXB0CTRL + 16*(channel);
 
-	// yikes
-    // osMessageQueueGet(CANTxMessageQueue, msg, NULL, osWaitForever);
-
+	// Initializations
 	uint8_t sendCommand = 0x80 + (0x01 < channel); 	   //instruction to send CAN message on buffer 1
-
 	uint8_t TXBNSIDH = (msg->ID & 0b11111111000) >> 3; // mask upper ID register (SD 10-3)
 	uint8_t TXBNSIDL = (msg->ID & 0b111) << 5; 	   	   // mask lower ID register (SD 2-0)
 	uint8_t TXBNDLC = msg->DLC & 0x0F;				   // mask DLC
@@ -234,6 +267,7 @@ uint8_t sendCANMessage(CANMsg *msg, CANPeripheral *peripheral)
 	// write to TXBNCTRL<1:0>
 	CAN_IC_WRITE_REGISTER_BITWISE(initialBufferAddress, 0x03, 0x03, peripheral);
 
+	// Initiate message transmit
 	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_RESET);
 	HAL_SPI_Transmit(peripheral->hspi, &sendCommand, 1, 100U);  // Send command to transmit
 	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_SET);
@@ -245,23 +279,21 @@ uint8_t sendCANMessage(CANMsg *msg, CANPeripheral *peripheral)
   * @retval None
   */
 uint8_t sendExtendedCANMessage(CANMsg *msg, CANPeripheral *peripheral)
-{
+{	
+	// Find TxBuffer to use
 	// uint8_t initialBufferAddress = TXB0CTRL + 16*(channel); //TXB0CTRL for channel 1, TXB1CTRL for channel 2, TXB2CTRL for channel 3
     uint8_t channel = checkAvailableTXChannel(peripheral);
 	uint8_t initialBufferAddress = TXB0CTRL + 16*(channel);
 
-	// delete this later
-    //osMessageQueueGet(CANTxMessageQueue, msg, NULL, osWaitForever);
-    //todo: FIX THIS CHANNEL!
-
-	uint8_t sendCommand = 0x80 +  (1 << channel); //instruction to send CAN message on channel
-
+	// Initializations
+	uint8_t sendCommand = 0x80 + (1 << channel); //instruction to send CAN message on channel
 	uint8_t TXBNSIDH = (msg->extendedID >> 21) & 0xFF;
 	uint8_t TXBNSIDL = (((msg->extendedID >> 18) & 0x07) << 5) | 0x08 | ((msg->ID >> 16) & 0x03);
 	uint8_t TXBNEID8 = (msg->extendedID >> 8) & 0xFF;
 	uint8_t TXBNEID0 = msg->extendedID & 0xFF;
 	uint8_t TXBNDLC = msg->DLC & 0x0F;
 
+	// Set Extended Identifier and DLC
 	CAN_IC_WRITE_REGISTER(initialBufferAddress + 1, TXBNSIDH, peripheral); // SD 10-3
 	CAN_IC_WRITE_REGISTER(initialBufferAddress + 2, TXBNSIDL, peripheral); // SD 2-0, ED 17-16
 	CAN_IC_WRITE_REGISTER(initialBufferAddress + 3, TXBNEID8, peripheral); // ED 15-8
@@ -276,6 +308,7 @@ uint8_t sendExtendedCANMessage(CANMsg *msg, CANPeripheral *peripheral)
 
 	CAN_IC_WRITE_REGISTER_BITWISE(initialBufferAddress, 0x03, 0x03, peripheral); //set transmit buffer priority to 3 (max)
 
+	// Initiate message transmit
 	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_RESET);
 	HAL_SPI_Transmit(peripheral->hspi, &sendCommand, 1, 100U);  //Send command to transmit
 	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_SET);
@@ -287,8 +320,8 @@ uint8_t sendExtendedCANMessage(CANMsg *msg, CANPeripheral *peripheral)
   * @retval None
   */
 void receiveCANMessage(uint8_t channel, uint32_t* ID, uint8_t* DLC, uint8_t* data, CANPeripheral *peripheral)
-{
-	uint8_t initialBufferAddress = RXB0CTRL + 16*(channel); //RXB0CTRL for channel 1, RXB1CTRL for channel 2
+{	
+	uint8_t initialBufferAddress = RXB0CTRL + 16*(channel); //RXB0CTRL for channel 0, RXB1CTRL for channel 1
 
 	uint8_t RXBNSIDH = 0;
 	uint8_t RXBNSIDL = 0;
@@ -302,10 +335,8 @@ void receiveCANMessage(uint8_t channel, uint32_t* ID, uint8_t* DLC, uint8_t* dat
 	{
 		uint8_t RXBNEID8 = 0;
 		uint8_t RXBNEID0 = 0;
-
-		CAN_IC_READ_REGISTER(initialBufferAddress + 3, &RXBNEID8, peripheral); //ED 15-8
-		CAN_IC_READ_REGISTER(initialBufferAddress + 4, &RXBNEID0, peripheral); //ED 7-0
-
+		CAN_IC_READ_REGISTER(initialBufferAddress + 3, &RXBNEID8, peripheral); // ED 15-8
+		CAN_IC_READ_REGISTER(initialBufferAddress + 4, &RXBNEID0, peripheral); // ED 7-0
 		*ID = (RXBNSIDH << 21) | (((RXBNSIDL >> 5) & 0x07) << 18) | ((RXBNSIDL & 0x03) << 16) | (RXBNEID8 << 8) | (RXBNEID0);
 	} else // CAN message is standard
 	{

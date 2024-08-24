@@ -8,17 +8,15 @@
 #include "CANTxGatekeeperTask.h"
 
 void CANTxGatekeeperTask(void* arg) {
-
-	// This block is to initialize a message queue of CAN Messages to send for testing
-    CANMsg newMsg;
     for (;;) {
-        CANTxGatekeeper(&newMsg);
+        CANTxGatekeeper();
     }
 }
 
 void CANTxGatekeeper(CANMsg *msg) {
 	// Acquire message to send from queue
-	osStatus_t status = osMessageGet(CANTxMessageQueue, msg, NULL, osWaitForever);
+	CANMsg newMsg;
+	osStatus_t status = osMessageQueueGet(CANTxMessageQueue, &newMsg, NULL, osWaitForever);
 	if (status != osOK) {
 		// Handle if not ok
 	}
@@ -30,11 +28,11 @@ void CANTxGatekeeper(CANMsg *msg) {
 		// if extendedID == 0, then message is standard
 		if ((msg->extendedID == 0) && (msg->ID != 0))
 		{
-			sendCANMessage(msg, &peripheral);
+			sendCANMessage(msg, &peripheral2);
 		}
 		else
 		{
-			sendExtendedCANMessage(msg, &peripheral);
+			sendExtendedCANMessage(msg, &peripheral2);
 		}
 		osMutexRelease(SPIMutexHandle);
 	}

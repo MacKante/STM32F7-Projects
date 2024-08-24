@@ -7,25 +7,27 @@
 
 #pragma once
 
-#include "CAN.h"
+#include "main.h"
+#include <stdint.h>
 #include "cmsis_os.h"
 #include "cmsis_os2.h"
+#include "CAN.h"
 
 extern osMutexId_t SPIMutexHandle;
 extern osMessageQueueId_t CANInterruptQueue;
 extern osMessageQueueId_t CANRxMessageQueue;
 
+extern uint8_t CANReadInterruptFlag;
+
 extern CANPeripheral peripheral1;
 extern CANPeripheral peripheral2;
-
-extern ReceiveMsg RX0Buffer;
-extern ReceiveMsg RX1Buffer;
 
 extern uint8_t TXB0StatusFlag;
 extern uint8_t TXB1StatusFlag;
 extern uint8_t TXB2StatusFlag;
 
 typedef enum {
+	INVALID_INT, // In case of invalid interrupt trigger
     RX0IF,  // Receive Buffer 0 Full
     RX1IF,  // Receive Buffer 1 Full 
     TX0IF,  // Transmit Buffer 0 Empty 
@@ -38,7 +40,5 @@ typedef enum {
 
 void CANClearInterruptTask(void* arg);
 void CAN_CLEAR_INTERRUPT(CANPeripheral* peripheral);
+void CAN_CLEAR_EFLG(CANPeripheral* peripheral);
 
-typedef struct {
-	CAN_COMMAND command;
-} CAN_COMMAND_Msg;

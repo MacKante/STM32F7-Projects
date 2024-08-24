@@ -64,8 +64,8 @@ all: main-build
 main-build: mcp2510_drivers.elf secondary-outputs
 
 # Tool invocations
-mcp2510_drivers.elf mcp2510_drivers.map: $(OBJS) $(USER_OBJS) C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\STM32F767ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "mcp2510_drivers.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\MacKante\Desktop\STM32F7-Projects\mcp2510_drivers\STM32F767ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="mcp2510_drivers.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+mcp2510_drivers.elf mcp2510_drivers.map: $(OBJS) $(USER_OBJS) C:\Users\Macante\Desktop\STM32F7-Projects\mcp2510_drivers\STM32F767ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "mcp2510_drivers.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\Macante\Desktop\STM32F7-Projects\mcp2510_drivers\STM32F767ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="mcp2510_drivers.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

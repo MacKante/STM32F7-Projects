@@ -1,5 +1,6 @@
 "./Core/Src/CAN.o"
-"./Core/Src/CANRxInterruptTask.o"
+"./Core/Src/CANClearInterruptTask.o"
+"./Core/Src/CANRxMessageTask.o"
 "./Core/Src/CANTxGatekeeperTask.o"
 "./Core/Src/freertos.o"
 "./Core/Src/main.o"

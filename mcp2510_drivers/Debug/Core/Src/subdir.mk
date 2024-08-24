@@ -6,7 +6,8 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../Core/Src/CAN.c \
-../Core/Src/CANRxInterruptTask.c \
+../Core/Src/CANClearInterruptTask.c \
+../Core/Src/CANRxMessageTask.c \
 ../Core/Src/CANTxGatekeeperTask.c \
 ../Core/Src/freertos.c \
 ../Core/Src/main.c \
@@ -21,7 +22,8 @@ C_SRCS += \
 
 OBJS += \
 ./Core/Src/CAN.o \
-./Core/Src/CANRxInterruptTask.o \
+./Core/Src/CANClearInterruptTask.o \
+./Core/Src/CANRxMessageTask.o \
 ./Core/Src/CANTxGatekeeperTask.o \
 ./Core/Src/freertos.o \
 ./Core/Src/main.o \
@@ -36,7 +38,8 @@ OBJS += \
 
 C_DEPS += \
 ./Core/Src/CAN.d \
-./Core/Src/CANRxInterruptTask.d \
+./Core/Src/CANClearInterruptTask.d \
+./Core/Src/CANRxMessageTask.d \
 ./Core/Src/CANTxGatekeeperTask.d \
 ./Core/Src/freertos.d \
 ./Core/Src/main.d \
@@ -57,7 +60,7 @@ Core/Src/%.o Core/Src/%.su Core/Src/%.cyclo: ../Core/Src/%.c Core/Src/subdir.mk
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-	-$(RM) ./Core/Src/CAN.cyclo ./Core/Src/CAN.d ./Core/Src/CAN.o ./Core/Src/CAN.su ./Core/Src/CANRxInterruptTask.cyclo ./Core/Src/CANRxInterruptTask.d ./Core/Src/CANRxInterruptTask.o ./Core/Src/CANRxInterruptTask.su ./Core/Src/CANTxGatekeeperTask.cyclo ./Core/Src/CANTxGatekeeperTask.d ./Core/Src/CANTxGatekeeperTask.o ./Core/Src/CANTxGatekeeperTask.su ./Core/Src/freertos.cyclo ./Core/Src/freertos.d ./Core/Src/freertos.o ./Core/Src/freertos.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/queueMessageTask1.cyclo ./Core/Src/queueMessageTask1.d ./Core/Src/queueMessageTask1.o ./Core/Src/queueMessageTask1.su ./Core/Src/queueMessageTask2.cyclo ./Core/Src/queueMessageTask2.d ./Core/Src/queueMessageTask2.o ./Core/Src/queueMessageTask2.su ./Core/Src/stm32f7xx_hal_msp.cyclo ./Core/Src/stm32f7xx_hal_msp.d ./Core/Src/stm32f7xx_hal_msp.o ./Core/Src/stm32f7xx_hal_msp.su ./Core/Src/stm32f7xx_hal_timebase_tim.cyclo ./Core/Src/stm32f7xx_hal_timebase_tim.d ./Core/Src/stm32f7xx_hal_timebase_tim.o ./Core/Src/stm32f7xx_hal_timebase_tim.su ./Core/Src/stm32f7xx_it.cyclo ./Core/Src/stm32f7xx_it.d ./Core/Src/stm32f7xx_it.o ./Core/Src/stm32f7xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f7xx.cyclo ./Core/Src/system_stm32f7xx.d ./Core/Src/system_stm32f7xx.o ./Core/Src/system_stm32f7xx.su
+	-$(RM) ./Core/Src/CAN.cyclo ./Core/Src/CAN.d ./Core/Src/CAN.o ./Core/Src/CAN.su ./Core/Src/CANClearInterruptTask.cyclo ./Core/Src/CANClearInterruptTask.d ./Core/Src/CANClearInterruptTask.o ./Core/Src/CANClearInterruptTask.su ./Core/Src/CANRxMessageTask.cyclo ./Core/Src/CANRxMessageTask.d ./Core/Src/CANRxMessageTask.o ./Core/Src/CANRxMessageTask.su ./Core/Src/CANTxGatekeeperTask.cyclo ./Core/Src/CANTxGatekeeperTask.d ./Core/Src/CANTxGatekeeperTask.o ./Core/Src/CANTxGatekeeperTask.su ./Core/Src/freertos.cyclo ./Core/Src/freertos.d ./Core/Src/freertos.o ./Core/Src/freertos.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/queueMessageTask1.cyclo ./Core/Src/queueMessageTask1.d ./Core/Src/queueMessageTask1.o ./Core/Src/queueMessageTask1.su ./Core/Src/queueMessageTask2.cyclo ./Core/Src/queueMessageTask2.d ./Core/Src/queueMessageTask2.o ./Core/Src/queueMessageTask2.su ./Core/Src/stm32f7xx_hal_msp.cyclo ./Core/Src/stm32f7xx_hal_msp.d ./Core/Src/stm32f7xx_hal_msp.o ./Core/Src/stm32f7xx_hal_msp.su ./Core/Src/stm32f7xx_hal_timebase_tim.cyclo ./Core/Src/stm32f7xx_hal_timebase_tim.d ./Core/Src/stm32f7xx_hal_timebase_tim.o ./Core/Src/stm32f7xx_hal_timebase_tim.su ./Core/Src/stm32f7xx_it.cyclo ./Core/Src/stm32f7xx_it.d ./Core/Src/stm32f7xx_it.o ./Core/Src/stm32f7xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f7xx.cyclo ./Core/Src/system_stm32f7xx.d ./Core/Src/system_stm32f7xx.o ./Core/Src/system_stm32f7xx.su
 
 .PHONY: clean-Core-2f-Src
 
