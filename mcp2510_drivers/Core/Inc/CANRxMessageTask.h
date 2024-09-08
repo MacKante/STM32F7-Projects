@@ -24,3 +24,6 @@ extern osMessageQueueId_t CANRxMessageQueue;
 
 extern CANPeripheral peripheral1;
 extern CANPeripheral peripheral2;
+
+extern uint8_t RX0Flag;
+extern uint8_t RX1Flag;

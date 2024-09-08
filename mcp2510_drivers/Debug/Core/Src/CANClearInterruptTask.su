@@ -1,3 +1,3 @@
 ../Core/Src/CANClearInterruptTask.c:13:6:CANClearInterruptTask	16	static
 ../Core/Src/CANClearInterruptTask.c:19:6:CAN_CLEAR_INTERRUPT	24	static
-../Core/Src/CANClearInterruptTask.c:93:6:CAN_CLEAR_EFLG	24	static
+../Core/Src/CANClearInterruptTask.c:95:6:CAN_CLEAR_EFLG	24	static

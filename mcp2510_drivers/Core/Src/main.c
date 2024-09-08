@@ -73,12 +73,12 @@ const osThreadAttr_t defaultTask_attributes = {
 //   .stack_size = DEFAULT_TASK_STACK_SIZE
 // };
 
-// osThreadId_t queueMessageTask2Handle;
-// const osThreadAttr_t queueMessageTask2_attributes = {
-//   .name = "queueMessageTask2",
-//   .priority = (osPriority_t) osPriorityLow,
-//   .stack_size = DEFAULT_TASK_STACK_SIZE
-// };
+osThreadId_t queueMessageTask2Handle;
+const osThreadAttr_t queueMessageTask2_attributes = {
+	.name = "queueMessageTask2",
+	.priority = (osPriority_t) osPriorityLow,
+	.stack_size = DEFAULT_TASK_STACK_SIZE
+};
 
 /* Definition for CANTxGateKeeperTask */
 osMutexId_t CANTxGateKeeperTaskHandle;
@@ -92,7 +92,7 @@ const osThreadAttr_t CANTxGateKeeperTask_attributes = {
 osThreadId_t CANRxMessageTaskHandle;
 const osThreadAttr_t CANRxMessageTask_attributes = {
   .name = "CANRxMessageTask",
-  .priority = (osPriority_t) osPriorityBelowNormal,
+  .priority = (osPriority_t) osPriorityNormal,
   .stack_size = DEFAULT_TASK_STACK_SIZE
 };
 
@@ -100,7 +100,7 @@ const osThreadAttr_t CANRxMessageTask_attributes = {
 osThreadId_t CANClearInterruptTaskHandle;
 const osThreadAttr_t CANClearInterruptTask_attributes = {
   .name = " CANClearInterruptTask",
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityAboveNormal,
   .stack_size = DEFAULT_TASK_STACK_SIZE
 };
 
@@ -135,7 +135,7 @@ uint8_t CANReadInterruptFlag = 0;
 
 // RX flags
 uint8_t RX0Flag = 0;
-uint8_t RX1Flag = 1;
+uint8_t RX1Flag = 0;
 
 /* RXnBuffers - Buffers for each of the Rx channels to dump */
 ReceiveMsg RX0Buffer;
@@ -146,12 +146,13 @@ uint8_t TXB0StatusFlag = 1;
 uint8_t TXB1StatusFlag = 1;
 uint8_t TXB2StatusFlag = 1;
 
+volatile uint8_t CAN_FINISH_CONFIG_FLAG = 0;
 // Example CAN message struct for testing
 CANMsg msg1 = {
-			.DLC = 1,
-			.ID = 0,
-			.extendedID = 0xCFCFCFC,
-			.data = {0xCC}
+	.DLC = 1,
+	.ID = 0,
+	.extendedID = 0xCFCFCFC,
+	.data = {0xCC}
 };
 /* USER CODE END PV */
 
@@ -210,7 +211,8 @@ int main(void)
 
   // Configure CAN IC
   ConfigureCANSPI(&peripheral1);
-  ConfigureCANSPI(&peripheral2);
+  // ConfigureCANSPI(&peripheral2);
+  CAN_FINISH_CONFIG_FLAG = 1;
 
   /* USER CODE END 2 */
 
@@ -235,25 +237,33 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
-  CANInterruptQueue = osMessageQueueNew(CAN_INTERRUPT_QUEUE_COUNT, sizeof(CAN_INTERRUPT), NULL);
+  // CANInterruptQueue = osMessageQueueNew(CAN_INTERRUPT_QUEUE_COUNT, sizeof(CAN_INTERRUPT), NULL);
   CANTxMessageQueue = osMessageQueueNew(CAN_TRANSMIT_QUEUE_COUNT, sizeof(CANMsg), NULL);
-  CANRxMessageQueue = osMessageQueueNew(CAN_RECEIVE_QUEUE_COUNT, sizeof(uint8_t), NULL);
+  CANRxMessageQueue = osMessageQueueNew(CAN_RECEIVE_QUEUE_COUNT, sizeof(uint16_t), NULL);
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
   /* creation of defaultTask */
-  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+  // defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+
+  /* USER CODE BEGIN RTOS_THREADS */
+  /* add threads, ... */
 
   /* Creation of CANClearTask */
-  CANClearInterruptTaskHandle = osThreadNew(CANClearInterruptTask, NULL, &CANClearInterruptTask_attributes);
+  // CANClearInterruptTaskHandle = osThreadNew(CANClearInterruptTask, NULL, &CANClearInterruptTask_attributes);
 
   /* Creation of CANRxMessageTask */
   CANRxMessageTaskHandle = osThreadNew(CANRxMessageTask, NULL, &CANRxMessageTask_attributes);
 
+  /* Creation of CANRxMessageTask */
+  // CANRxMessageTaskHandle_1 = osThreadNew(CANRxMessageTask1, NULL, &CANRxMessageTask_attributes_1);
+
   /* Creation of CANTxGatekeeperTask */
   CANTxGateKeeperTaskHandle = osThreadNew(CANTxGatekeeperTask, NULL, &CANTxGateKeeperTask_attributes);
-  /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
+
+  /* Creation of queueMessageTask2 */
+  queueMessageTask2Handle = osThreadNew(queueMessageTask2, NULL, &queueMessageTask2_attributes);
+
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -270,6 +280,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -351,7 +362,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -391,7 +402,7 @@ static void MX_SPI4_Init(void)
   hspi4.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi4.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi4.Init.NSS = SPI_NSS_SOFT;
-  hspi4.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
+  hspi4.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
   hspi4.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi4.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi4.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -628,20 +639,39 @@ static void MX_GPIO_Init(void)
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	switch (GPIO_Pin) {
-		case CAN_INT_Pin:
-			// read the CANINTF register
-			CANReadInterruptFlag = 1;
-		case CAN_RX0BF_Pin:
-			osMessageQueuePut(CANRxMessageQueue, &RX0Flag, 0, osWaitForever);
-		case CAN_RX1BF_Pin:
-			osMessageQueuePut(CANRxMessageQueue, &RX1Flag, 0, osWaitForever);
-		case CAN2_INT_Pin:
-			// read the CANITNF register
-		case CAN2_RX0BF_Pin:
-			// osMessageQueuePut(mq_id, msg_ptr, msg_prio, osWaitForever);
-		case CAN2_RX1BF_Pin:
-			// osMessageQueuePut(mq_id, msg_ptr, msg_prio, osWaitForever);
+//	if (CAN_FINISH_CONFIG_FLAG) {
+//		osStatus_t status;
+//		switch (GPIO_Pin) {
+//			case CAN_INT_Pin:
+//				// read the CANINTF register
+//				CANReadInterruptFlag = 1;
+//			case CAN_RX0BF_Pin:
+//				RX0Flag = 1;
+//				status = osMessageQueuePut(CANRxMessageQueue, &GPIO_Pin, 0, 0);
+//			case CAN_RX1BF_Pin:
+//				RX1Flag = 1;
+//				status = osMessageQueuePut(CANRxMessageQueue, &GPIO_Pin, 0, 0);
+//	//		case CAN2_INT_Pin:
+//	//			// read the CANITNF register
+//	//		case CAN2_RX0BF_Pin:
+//	//			// osMessageQueuePut(mq_id, msg_ptr, msg_prio, osWaitForever);
+//	//		case CAN2_RX1BF_Pin:
+//	//			// osMessageQueuePut(mq_id, msg_ptr, msg_prio, osWaitForever);
+//		}
+//	}
+
+	if (CAN_FINISH_CONFIG_FLAG) {
+		osStatus_t status;
+		switch (GPIO_Pin) {
+			case CAN_RX0BF_Pin:
+				// RX0Flag = 1;
+				status = osMessageQueuePut(CANRxMessageQueue, &GPIO_Pin, 0U, 0U);
+				break;
+			case CAN_RX1BF_Pin:
+				// RX1Flag = 1;
+				status = osMessageQueuePut(CANRxMessageQueue, &GPIO_Pin, 0U, 0U);
+				break;
+		}
 	}
 }
 
@@ -667,7 +697,7 @@ void StartDefaultTask(void *argument)
 
 /**
   * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM6 interrupt took place, inside
+  * @note   This function is called  when TIM2 interrupt took place, inside
   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
   * a global variable "uwTick" used as application time base.
   * @param  htim : TIM handle
@@ -678,7 +708,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 0 */
 
   /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM6) {
+  if (htim->Instance == TIM2) {
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */

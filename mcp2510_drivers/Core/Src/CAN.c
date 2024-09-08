@@ -99,8 +99,6 @@ void CAN_IC_RESET(CANPeripheral *peripheral) {
 	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_RESET);
 	status = HAL_SPI_Transmit(peripheral->hspi, packet, 1, 100U);  //reset IC to default
 	HAL_GPIO_WritePin(peripheral->CS_PORT, peripheral->CS_PIN, GPIO_PIN_SET);
-
-	osDelay(100);
 }
 
 /**
@@ -137,7 +135,7 @@ void ConfigureCANSPI(CANPeripheral *peripheral)
 	// TODO: ask violet of this settings
 
 	// Ensure IC is out of reset state (128 clock cycles)
-	osDelay(100);
+	HAL_Delay(100);
 
 	// Tq = (2 x (BRP + 1)) / Fosc
 	uint8_t CONFIG_CNF1 = 0x01; //BRP = 1 to make tq = 250ns and a SJW of 1Tq
@@ -148,6 +146,7 @@ void ConfigureCANSPI(CANPeripheral *peripheral)
 
 	// Reset CAN IC
 	CAN_IC_RESET(peripheral);
+	HAL_Delay(100);
 
 	// CANSTAT.OPMOD must read as config mode to be able to write to the registers (0x80)
 	uint8_t CANSTAT_STATUS = 0;
@@ -156,7 +155,7 @@ void ConfigureCANSPI(CANPeripheral *peripheral)
 	// Ensure IC is in configuration mode
 	if ((CANSTAT_STATUS & 0xE0) != 0x80) {
 		CAN_IC_WRITE_REGISTER_BITWISE(CANCTRL, 0xE0, 0x80, peripheral);
-		osDelay(100);
+		HAL_Delay(100);
 	}
 
 	// Base IC Configuration Registers
@@ -174,24 +173,25 @@ void ConfigureCANSPI(CANPeripheral *peripheral)
 	// Toggle CAN_TEST_SETUP to 1 for loopback mode, 0 for normal mode
 	#if CAN_TEST_SETUP
 		CAN_IC_WRITE_REGISTER_BITWISE(CANCTRL, 0xE7, 0x44, peripheral);	// Put IC in loop-back mode for testing as well as enable CLKOUT pin with 1:1 prescaler
-		osDelay(100);
+		HAL_Delay(100);
 		CAN_IC_READ_REGISTER(CANSTAT, &CANSTAT_STATUS, peripheral); // 0x44
 	#else
 		CAN_IC_WRITE_REGISTER_BITWISE(CANCTRL, 0xE7, 0x04, peripheral); //Put IC in normal operation mode with CLKOUT pin enable and 1:1 prescaler
-		osDelay(100);
+		HAL_Delay(100);
 		CAN_IC_READ_REGISTER(CANSTAT, &CANSTAT_STATUS, peripheral);
 	#endif
 
 	// Reset and configure interrupts
 	CAN_IC_WRITE_REGISTER(CANINTE, 0x20, peripheral); 	//configure interrupts, currently enable ERRIF
 	CAN_IC_WRITE_REGISTER(CANINTF, 0x00, peripheral); 	//clear INTE flags
+	CAN_IC_WRITE_REGISTER(EFLG, 0x00, peripheral);
 }
 
 /*-------------------------------------------------------------------------------------------*/
 
 uint8_t checkAvailableTXChannel(CANPeripheral *peripheral)
 {
-    uint32_t prevWakeTime = xTaskGetTickCount(); 	//Delay is fine if we have a CanTxGatekeeperTask
+    // uint32_t prevWakeTime = xTaskGetTickCount(); 	//Delay is fine if we have a CanTxGatekeeperTask
 
 	//  Check if TXBnCTRL.TXREQ is set, if not then buffer is available to use
     for ever
@@ -239,7 +239,7 @@ uint8_t checkAvailableTXChannel(CANPeripheral *peripheral)
   * @param None
   * @retval None
   */
-uint8_t sendCANMessage(CANMsg *msg, CANPeripheral *peripheral)
+void sendCANMessage(CANMsg *msg, CANPeripheral *peripheral)
 {
 	// Find TxBuffer to use
 	uint8_t channel = checkAvailableTXChannel(peripheral);
@@ -278,8 +278,8 @@ uint8_t sendCANMessage(CANMsg *msg, CANPeripheral *peripheral)
   * @param None
   * @retval None
   */
-uint8_t sendExtendedCANMessage(CANMsg *msg, CANPeripheral *peripheral)
-{	
+void sendExtendedCANMessage(CANMsg *msg, CANPeripheral *peripheral)
+{
 	// Find TxBuffer to use
 	// uint8_t initialBufferAddress = TXB0CTRL + 16*(channel); //TXB0CTRL for channel 1, TXB1CTRL for channel 2, TXB2CTRL for channel 3
     uint8_t channel = checkAvailableTXChannel(peripheral);
@@ -320,7 +320,12 @@ uint8_t sendExtendedCANMessage(CANMsg *msg, CANPeripheral *peripheral)
   * @retval None
   */
 void receiveCANMessage(uint8_t channel, uint32_t* ID, uint8_t* DLC, uint8_t* data, CANPeripheral *peripheral)
-{	
+{
+	// Check if channel is valid, should never go in with wrong channel
+	if (channel > 1) {
+		return;
+	}
+
 	uint8_t initialBufferAddress = RXB0CTRL + 16*(channel); //RXB0CTRL for channel 0, RXB1CTRL for channel 1
 
 	uint8_t RXBNSIDH = 0;

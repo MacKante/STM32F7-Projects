@@ -40,8 +40,8 @@ void CAN_IC_REQUEST_TO_SEND(uint8_t channel, CANPeripheral *peripheral);
 
 // CAN Operation Functions
 void ConfigureCANSPI(CANPeripheral *peripheral);
-uint8_t sendCANMessage(CANMsg *msg, CANPeripheral *peripheral);
-uint8_t sendExtendedCANMessage(CANMsg *msg, CANPeripheral *peripheral);
+void sendCANMessage(CANMsg *msg, CANPeripheral *peripheral);
+void sendExtendedCANMessage(CANMsg *msg, CANPeripheral *peripheral);
 void receiveCANMessage(uint8_t channel, uint32_t* ID, uint8_t* DLC, uint8_t* data, CANPeripheral *peripheral);
 uint8_t checkAvailableTXChannel(CANPeripheral *peripheral);
 

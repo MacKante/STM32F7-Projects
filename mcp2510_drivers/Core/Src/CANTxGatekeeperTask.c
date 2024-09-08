@@ -13,7 +13,7 @@ void CANTxGatekeeperTask(void* arg) {
     }
 }
 
-void CANTxGatekeeper(CANMsg *msg) {
+void CANTxGatekeeper() {
 	// Acquire message to send from queue
 	CANMsg newMsg;
 	osStatus_t status = osMessageQueueGet(CANTxMessageQueue, &newMsg, NULL, osWaitForever);
@@ -26,13 +26,13 @@ void CANTxGatekeeper(CANMsg *msg) {
 	{
 		// check if CAN message is standard/extended
 		// if extendedID == 0, then message is standard
-		if ((msg->extendedID == 0) && (msg->ID != 0))
+		if ((newMsg.extendedID == 0) && (newMsg.ID != 0))
 		{
-			sendCANMessage(msg, &peripheral2);
+			sendCANMessage(&newMsg, &peripheral1);
 		}
 		else
 		{
-			sendExtendedCANMessage(msg, &peripheral2);
+			sendExtendedCANMessage(&newMsg, &peripheral1);
 		}
 		osMutexRelease(SPIMutexHandle);
 	}
